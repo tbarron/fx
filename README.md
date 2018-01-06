@@ -2,11 +2,11 @@
 
 This program provides various command line effects.
 
-  * fx -c "mv % 2018.0105.%" one two three
-    * Renames files "one", "two", and "three" to be "2018.0105.one",
-      "2018.0105.two", and "2018.0105.three", respectively.
+    #  Rename files "one", "two", and "three" to "2018.0105.one",
+    # "2018.0105.two", and "2018.0105.three", respectively.
 
-  * fx -e s/foo/bar/ file1 file2 ... filen
-    * Rename files in the list, changing 'foo' in the filename to 'bar'
-     
-        
+    $ fx -c "mv % 2018.0105.%" one two three
+
+    # Rename files in the list, changing 'foo' in the filename to 'bar'
+
+    $ fx -e s/foo/bar/ file1 file2 ... filen

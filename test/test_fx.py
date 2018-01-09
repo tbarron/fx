@@ -91,25 +91,10 @@ def test_fx_help():
              "-d        debug -- run the python debugger",
              "-n        dryrun -- just show what would happen",
              "-q        quiet -- don't echo commands before running them",
-             "-c       COMMAND (% is replaced with each FILE in turn)",
-             "-e       SUBSTITUTION -- a substitute expression: s/foo/bar/",
-             "-i       RANGE -- <low number>:<high number>",
-             "-x       Bundle strings from stdin like xargs into '%'",
-             "",
-             "-i low:high -c <command> (% ranges from low to high-1)",
-             "Options:",
-             "",
-             "-c CMD, --command=CMD",
-             "command to apply to all arguments",
-             "-d, --debug           run under the debugger",
-             "-e EDIT, --edit=EDIT  file rename expression applied to " +
-             "all arguments",
-             " -i IRANGE, --integer=IRANGE",
-             "low:high -- generate range of numbers",
-             "-n, --dry-run         dryrun or execute",
-             "-q, --quiet           don't echo commands, just run them",
-             "-x, --xargs           batch input from stdin into command" +
-             " lines like xargs",
+             "-c        COMMAND ('%' is replaced with each FILE in turn)",
+             "-e        SUBSTITUTION -- a substitute expression: s/foo/bar/",
+             "-i        RANGE -- <low number>:<high number>",
+             "-x        Bundle strings from stdin like xargs into '%'",
              ]
     # script = U.script_location("fx")
     script = pexpect.which('fx')

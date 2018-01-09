@@ -20,7 +20,7 @@ Usage:
 Options
     -d        debug -- run the python debugger
     -n        dryrun -- just show what would happen
-    -q        quite -- don't echo commands before running them
+    -q        quiet -- don't echo commands before running them
     -c        COMMAND ('%' is replaced with each FILE in turn)
     -e        SUBSTITUTION -- a substitute expression: s/foo/bar/
     -i        RANGE -- <low number>:<high number>

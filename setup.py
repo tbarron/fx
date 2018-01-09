@@ -1,7 +1,7 @@
 from setuptools import setup
 
-setup(name="PROJECT"
-    author="Your Name",
-    author_email="your_address@domain.com",
-    entry_points={'console_scripts': [proj = proj:main]}
+setup(name="fx",
+    author="Tom Barron",
+    author_email="tusculum@gmail.com",
+    entry_points={'console_scripts': ["fx = fx:main"]}
     )

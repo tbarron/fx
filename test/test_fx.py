@@ -539,6 +539,19 @@ def test_usage():
 
 
 # ---------------------------------------------------------------------------
+def exp_xargs_data(prefix, knees):
+    """
+    Construct a set of expected data for xargs_wrap and batch_command
+    """
+    rval = []
+    lo = 1
+    for hi in knees:
+        rval.append(prefix + " ".join([str(idx) for idx in range(lo, hi)]))
+        lo = hi
+    return rval
+
+
+# ---------------------------------------------------------------------------
 @pytest.fixture
 def fx_batch(tmpdir):
     """

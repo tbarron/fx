@@ -5,6 +5,7 @@ import re
 import optparse
 import os
 import pexpect
+import py
 import tbx
 import pytest
 
@@ -360,12 +361,10 @@ def test_subst_command_both(tmpdir, capsys):
     Test subst_command() with dryrun True and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': True, 'quiet': True, 'cmd': 'ls %'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': True, '-q': True, 'COMMAND': "ls %"}
         a = ['a.pl', 'b.pl', 'c.pl']
         exp = "".join(["would do 'ls %s'\n" % x for x in a])
-        U.safe_unlink(a)
-
         fx.subst_command(v, a)
         assert exp in "".join(capsys.readouterr())
 
@@ -376,13 +375,10 @@ def test_subst_command_dryrun(tmpdir, capsys):
     Test subst_command() with dryrun True and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': True, 'quiet': False,
-                             'cmd': 'ls %'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': True, '-q': False, 'COMMAND': "ls %"}
         a = ['a.pl', 'b.pl', 'c.pl']
         exp = "".join(["would do 'ls %s'\n" % x for x in a])
-        U.safe_unlink(a)
-
         fx.subst_command(v, a)
         assert exp in " ".join(capsys.readouterr())
 
@@ -393,13 +389,12 @@ def test_subst_command_neither(tmpdir, capsys):
     Test subst_command() with dryrun False and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': False, 'quiet': False,
-                             'cmd': 'ls %'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': False, '-q': False, 'COMMAND': "ls %"}
         a = ['a.pl', 'b.pl', 'c.pl']
+        for x in a:
+            tmpdir.join(x).ensure()
         exp = "".join(['ls %s\n%s\n' % (x, x) for x in a])
-        U.touch(a)
-
         fx.subst_command(v, a)
         assert exp in " ".join(capsys.readouterr())
 
@@ -410,13 +405,12 @@ def test_subst_command_quiet(tmpdir, capsys):
     Test subst_command() with dryrun False and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': False, 'quiet': True,
-                             'cmd': 'ls %'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': False, '-q': True, 'COMMAND': "ls %"}
         a = ['a.pl', 'b.pl', 'c.pl']
+        for x in a:
+            tmpdir.join(x).ensure()
         exp = "".join(['%s\n' % x for x in a])
-        U.touch(a)
-
         fx.subst_command(v, a)
         assert exp in " ".join(capsys.readouterr())
 

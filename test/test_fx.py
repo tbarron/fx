@@ -421,18 +421,16 @@ def test_subst_rename_both(tmpdir, capsys):
     Test subst_rename() with dryrun True and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
+    with tbx.chdir(tmpdir.strpath):
         arglist = ['a.pl', 'b.pl', 'c.pl']
         for a in arglist:
-            U.touch(a)
+            tmpdir.join(a).ensure()
         expected = "".join(['rename %s.pl %s.xyzzy\n' % (x, x) for x in
                             [q.replace('.pl', '') for q in arglist]])
-        v = optparse.Values({'dryrun': True, 'quiet': True,
-                             'edit': 's/.pl/.xyzzy'})
-
+        v = {'-n': True, '-q': True, '-e': True,
+             'SUBSTITUTION': "s/.pl/.xyzzy"}
         fx.subst_rename(v, arglist)
         assert expected in " ".join(capsys.readouterr())
-
         q = glob.glob('*.pl')
         q.sort()
         assert q == arglist
@@ -444,18 +442,16 @@ def test_subst_rename_dryrun(tmpdir, capsys):
     Test subst_rename() with dryrun True and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
+    with tbx.chdir(tmpdir.strpath):
         arglist = ['a.pl', 'b.pl', 'c.pl']
         for a in arglist:
-            U.touch(a)
+            tmpdir.join(a).ensure()
         expected = "".join(['rename %s.pl %s.xyzzy\n' % (x, x) for x in
                             [q.replace('.pl', '') for q in arglist]])
-        v = optparse.Values({'dryrun': True, 'quiet': False,
-                             'edit': 's/.pl/.xyzzy'})
-
+        v = {'-n': True, '-q': False, '-e': True,
+             'SUBSTITUTION': "s/.pl/.xyzzy"}
         fx.subst_rename(v, arglist)
         assert expected in " ".join(capsys.readouterr())
-
         q = glob.glob('*.pl')
         q.sort()
         assert q == arglist
@@ -467,19 +463,17 @@ def test_subst_rename_neither(tmpdir, capsys):
     Test subst_rename() with dryrun False and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
+    with tbx.chdir(tmpdir.strpath):
         arglist = ['a.pl', 'b.pl', 'c.pl']
         for a in arglist:
-            U.touch(a)
+            tmpdir.join(a).ensure()
         expected = "".join(['rename %s.pl %s.xyzzy\n' % (x, x) for x in
                             [q.replace('.pl', '') for q in arglist]])
         exp = [re.sub('.pl', '.xyzzy', x) for x in arglist]
-        v = optparse.Values({'dryrun': False, 'quiet': False,
-                             'edit': 's/.pl/.xyzzy'})
-
+        v = {'-n': False, '-q': False, '-e': True,
+             'SUBSTITUTION': "s/.pl/.xyzzy"}
         fx.subst_rename(v, arglist)
         assert expected in " ".join(capsys.readouterr())
-
         q = glob.glob('*.xyzzy')
         q.sort()
         assert exp == q
@@ -491,23 +485,20 @@ def test_subst_rename_quiet(tmpdir, capsys):
     Test subst_rename() with dryrun False and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
+    with tbx.chdir(tmpdir.strpath):
         arglist = ['a.pl', 'b.pl', 'c.pl']
         for a in arglist:
-            U.touch(a)
+            tmpdir.join(a).ensure()
         expected = "".join(['rename %s.pl %s.xyzzy\n' % (x, x) for x in
                             [q.replace('.pl', '') for q in arglist]])
         exp = [re.sub('.pl', '.xyzzy', x) for x in arglist]
-        v = optparse.Values({'dryrun': False, 'quiet': True,
-                             'edit': 's/.pl/.xyzzy'})
-
+        v = {'-n': False, '-q': True, '-e': True,
+             'SUBSTITUTION': "s/.pl/.xyzzy"}
         fx.subst_rename(v, arglist)
         assert expected in " ".join(capsys.readouterr())
-
         q = glob.glob('*.pl')
         q.sort()
         assert [] == q
-
         q = glob.glob('*.xyzzy')
         q.sort()
         assert exp == q

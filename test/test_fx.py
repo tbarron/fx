@@ -1,7 +1,4 @@
-# import pdb
-# pdb.set_trace()
 import fx
-# from bscr import util as U
 import glob
 import re
 import optparse
@@ -11,6 +8,80 @@ import pytest
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("cmd, item, exp", [
+    ('/home/dir/one ~/%', 'two', '/home/dir/one /home/dir/two /home/dir/%'),
+    ('~/%', 'one', '/home/dir/one /home/dir/%'),
+    ('/home/dir/one /home/dir/two ~/%', 'three',
+     '/home/dir/one /home/dir/two /home/dir/three /home/dir/%'),
+
+    ('foobar', 'one', 'foobar one'),
+    ('foobar one', 'two', 'foobar one two'),
+    ('foobar %', 'one', 'foobar one %'),
+    ('foobar%', 'one', 'foobarone foobar%'),
+    ('foobarone foobar%', 'two', 'foobarone foobartwo foobar%'),
+
+    ('foo%bar', 'one', 'fooonebar foo%bar'),
+    ('fooonebar foo%bar', 'two', 'fooonebar footwobar foo%bar'),
+    ('foo %bar', 'one', 'foo onebar %bar'),
+    ('foo onebar %bar', 'two', 'foo onebar twobar %bar'),
+
+    ('foo% bar', 'one', 'fooone foo% bar'),
+    ('fooone foo% bar', 'two', 'fooone footwo foo% bar'),
+    ('fooone footwo foo% bar', 'three', 'fooone footwo foothree foo% bar'),
+
+    ('foo % bar', 'one', 'foo one % bar'),
+    ('foo one % bar', 'two', 'foo one two % bar'),
+    ('foo one two % bar', 'three', 'foo one two three % bar'),
+
+    ('% foobar', 'one', 'one % foobar'),
+    ('one % foobar', 'two', 'one two % foobar'),
+    ('one two % foobar', 'three', 'one two three % foobar'),
+
+    ('%foobar', 'one', 'onefoobar %foobar'),
+    ('onefoobar %foobar', 'two', 'onefoobar twofoobar %foobar'),
+    ('onefoobar twofoobar %foobar', 'three',
+     'onefoobar twofoobar threefoobar %foobar'),
+
+    ('~ %', 'one', '/home/dir one %'),
+    ('/home/dir one %', 'two', '/home/dir one two %'),
+    ('/home/dir one two %', 'three', '/home/dir one two three %'),
+
+    ('% ~', 'one', 'one % /home/dir'),
+    ('one % /home/dir', 'two', 'one two % /home/dir'),
+    ('one two % /home/dir', 'three', 'one two three % /home/dir'),
+
+    ('%~', 'one', 'one/home/dir %/home/dir'),
+    ('one/home/dir %/home/dir', 'two', 'one/home/dir two/home/dir %/home/dir'),
+    ('one/home/dir two/home/dir %/home/dir', 'three',
+     'one/home/dir two/home/dir three/home/dir %/home/dir'),
+
+    ('$USER%', 'one', 'userone user%'),
+    ('userone user%', 'two', 'userone usertwo user%'),
+    ('userone usertwo user%', 'three', 'userone usertwo userthree user%'),
+
+    ('$USER %', 'one', 'user one %'),
+    ('user one %', 'two', 'user one two %'),
+    ('user one two %', 'three', 'user one two three %'),
+
+    ('% $USER', 'one', 'one % user'),
+    ('one % user', 'two', 'one two % user'),
+    ('one two % user', 'three', 'one two three % user'),
+
+    ('%$USER', 'one', 'oneuser %user'),
+    ('oneuser %user', 'two', 'oneuser twouser %user'),
+    ('oneuser twouser %user', 'three', 'oneuser twouser threeuser %user'),
+    ])
+def test_xw_sub(cmd, item, exp):
+    """
+    If a '%' appears in cmd, determine the word it appears in and then replace
+    that word with the item followed by the % word. By calling xw_sub
+    repeatedly, we can stuff item after item into the original command string.
+    """
+    pytest.dbgfunc()
+    with tbx.envset(HOME='/home/dir', USER='user'):
+        assert fx.xw_sub(cmd, item) == exp
+
+
 def test_batch_command_both(tmpdir, capsys, fx_batch):
     """
     Test batch_command with dryrun True and quiet True.

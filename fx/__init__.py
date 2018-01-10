@@ -173,11 +173,9 @@ def xargs_wrap(cmd, rble):
     tcmd = cmd
     rval = []
     for line in rble:
-        bline = line.strip()
-        for item in bline.split(" "):
-            tcmd = tbx.expand(re.sub('%', item + ' %', tcmd))
+        for item in line.strip().split(" "):
+            tcmd = xw_sub(tcmd, item.strip())
             pending = True
-
             if 240 < len(tcmd):
                 tcmd = re.sub(r'\s*%\s*', '', tcmd)
                 rval.append(tcmd)

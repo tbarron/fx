@@ -95,7 +95,7 @@ def iterate_command(options, arglist):
     Possible enhancements would be to handle low/high/step tuples, and
     to handle an arbitrary comma delimited list of values.
     """
-    (low, high) = options['-i'].split(':')
+    (low, high) = options['RANGE'].split(':')
     for idx in range(int(low), int(high)):
         cmd = tbx.expand(re.sub('%', str(idx), options['COMMAND']))
         psys(cmd, options)

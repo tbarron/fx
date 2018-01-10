@@ -189,6 +189,35 @@ def xargs_wrap(cmd, rble):
     return(rval)
 
 
+# ---------------------------------------------------------------------------
+def xw_sub(cmd, item):
+    """
+    word = regexp extracting the word containing '%'
+    stant = word ~ s/%/item
+    string = string ~ s/word/stant word/
+
+
+    Replace '%' in cmd with items subject to contextual rules about the
+    occurrence of '%'. Specifically,
+
+        'foobar'     => 'foobar <item1> <item2> ... <item3>'
+        'foo% bar'   => 'foo<item1> foo<item2> ... foo<itemn> bar'
+        'foo %bar'   => 'foo <item1>bar <item2>bar ... <itemn>bar'
+        'foo % bar'  => 'foo <item1> <item2> ... <itemn> bar'
+    """
+    if '~' in cmd or '$' in cmd:
+        cmd = tbx.expand(cmd)
+
+    if '%' in cmd:
+        [word] = re.findall("\S*%\S*", cmd)
+        stant = re.sub('%', item, word)
+        xp = "{} {}".format(stant, word)
+        rval = re.sub(word, xp, cmd)
+    else:
+        rval = cmd + " " + item
+    return rval
+
+
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
     main()

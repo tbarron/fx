@@ -3,6 +3,7 @@ import glob
 import io
 import re
 import optparse
+import os
 import pexpect
 import tbx
 import pytest
@@ -309,7 +310,7 @@ def test_psys_both(capsys):
     Test routine psys with dryrun True and quiet True.
     """
     pytest.dbgfunc()
-    v = optparse.Values({'dryrun': True, 'quiet': True})
+    v = {'-n': True, '-q': True}
     expected = "would do 'ls -d fx.py'\n"
     fx.psys('ls -d fx.py', v)
     assert expected in "".join(capsys.readouterr())
@@ -321,7 +322,7 @@ def test_psys_dryrun(capsys):
     Test routine psys with dryrun True and quiet False.
     """
     pytest.dbgfunc()
-    v = optparse.Values({'dryrun': True, 'quiet': False})
+    v = {'-n': True, '-q': False}
     expected = "would do 'ls -d nosuchfile'\n"
     fx.psys('ls -d nosuchfile', v)
     assert expected in "".join(capsys.readouterr())
@@ -333,10 +334,10 @@ def test_psys_neither(capsys):
     Test routine psys with dryrun False and quiet False.
     """
     pytest.dbgfunc()
-    root = U.findroot()
-    v = optparse.Values({'dryrun': False, 'quiet': False})
-    expected = "ls -d %s/fx.py\n%s/fx.py\n" % (root, root)
-    fx.psys('ls -d %s/fx.py' % root, v)
+    root = tbx.dirname(os.path.abspath(__file__), level=2)
+    v = {'-n': False, '-q': False}
+    expected = "ls -d %s/fx\n%s/fx\n" % (root, root)
+    fx.psys('ls -d %s/fx' % root, v)
     assert expected in " ".join(capsys.readouterr())
 
 
@@ -346,9 +347,9 @@ def test_psys_quiet(tmpdir, capsys, data):
     Test routine psys with dryrun False and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
+    with tbx.chdir(tmpdir.strpath):
         exp = "a.xyzzy\nb.xyzzy\nc.xyzzy\ntmpfile\n"
-        v = optparse.Values({'dryrun': False, 'quiet': True})
+        v = {'-n': False, '-q': True}
         fx.psys('ls', v)
         assert exp == "".join(capsys.readouterr())
 
@@ -566,7 +567,7 @@ def data(tmpdir, request):
     """
     set up some data
     """
-    if request.function.func_name == "test_psys_quiet":
+    if request.function.__name__ == "test_psys_quiet":
         for stem in ['a.xyzzy', 'b.xyzzy', 'c.xyzzy', 'tmpfile']:
             path = tmpdir.join(stem)
             path.ensure()

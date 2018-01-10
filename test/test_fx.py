@@ -249,10 +249,9 @@ def test_iterate_command_both(tmpdir, capsys):
     Test iterate_command() with dryrun True and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': True, 'quiet': True,
-                             'cmd': 'echo %',
-                             'irange': '5:10'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': True, '-q': True, 'COMMAND': "echo %",
+             '-i': True, 'RANGE': "5:10"}
         exp = "".join(["would do 'echo %d'\n" % i for i in range(5, 10)])
 
         fx.iterate_command(v, [])
@@ -265,10 +264,9 @@ def test_iterate_command_dryrun(tmpdir, capsys):
     Test iterate_command() with dryrun True and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': True, 'quiet': False,
-                             'cmd': 'echo %',
-                             'irange': '5:10'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': True, '-q': False, 'COMMAND': "echo %",
+             '-i': True, 'RANGE': "5:10"}
         exp = "".join(["would do 'echo %d'\n" % i for i in range(5, 10)])
 
         fx.iterate_command(v, [])
@@ -281,10 +279,9 @@ def test_iterate_command_neither(tmpdir, capsys):
     Test iterate_command() with dryrun False and quiet False.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': False, 'quiet': False,
-                             'cmd': 'echo %',
-                             'irange': '5:10'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': False, '-q': False, 'COMMAND': "echo %",
+             '-i': True, 'RANGE': "5:10"}
         exp = "".join(["echo %d\n%d\n" % (i, i) for i in range(5, 10)])
 
         fx.iterate_command(v, [])
@@ -297,10 +294,9 @@ def test_iterate_command_quiet(tmpdir, capsys):
     Test iterate_command() with dryrun False and quiet True.
     """
     pytest.dbgfunc()
-    with U.Chdir(tmpdir.strpath):
-        v = optparse.Values({'dryrun': False, 'quiet': True,
-                             'cmd': 'echo %',
-                             'irange': '5:10'})
+    with tbx.chdir(tmpdir.strpath):
+        v = {'-n': False, '-q': True, 'COMMAND': "echo %",
+             '-i': True, 'RANGE': "5:10"}
         exp = "".join(["%d\n" % i for i in range(5, 10)])
 
         fx.iterate_command(v, [])

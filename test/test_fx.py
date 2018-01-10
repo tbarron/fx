@@ -157,9 +157,8 @@ def test_batch_command_both(tmpdir, capsys, fx_batch):
     pytest.dbgfunc()
     v = {'-n': True, '-q': True, '-x': True, 'COMMAND': "echo %"}
     tmppath, data = fx_batch
-    exp = ''
-    for chunk in data:
-        exp += re.sub('^echo ', "would do 'echo ", chunk) + "'\n"
+    data = exp_xargs_data("would do 'echo ", [83, 146, 205, 250])
+    exp = "".join("{}'\n".format(line) for line in data)
     with open(tmppath, "r") as f:
         fx.batch_command(v, [], f)
     assert exp in "".join(capsys.readouterr())
@@ -173,9 +172,8 @@ def test_batch_command_dryrun(tmpdir, capsys, fx_batch):
     pytest.dbgfunc()
     v = {'-n': True, '-q': False, '-x': True, 'COMMAND': "echo %"}
     tmppath, data = fx_batch
-    exp = ''
-    for chunk in data:
-        exp += re.sub('^echo ', "would do 'echo ", chunk) + "'\n"
+    data = exp_xargs_data("would do 'echo ", [83, 146, 205, 250])
+    exp = "".join("{}'\n".format(line) for line in data)
     with open(tmppath, 'r') as f:
         fx.batch_command(v, [], f)
     assert exp in "".join(capsys.readouterr())
@@ -189,13 +187,15 @@ def test_batch_command_neither(tmpdir, capsys, fx_batch):
     pytest.dbgfunc()
     v = {'-n': False, '-q': False, '-x': True, 'COMMAND': "echo %"}
     tmppath, data = fx_batch
+    data = exp_xargs_data("", [83, 146, 205, 250])
     exp = ''
-    for chunk in data:
-        exp += chunk + '\n'
-        exp += re.sub('^echo ', '', chunk) + '\n'
+    for line in data:
+        exp += "echo {}\n".format(line)
+        exp += "{}\n".format(line)
+
     with open(tmppath, 'r') as f:
         fx.batch_command(v, [], f)
-    assert exp in "".join(capsys.readouterr())
+    assert exp.split("\n") == "".join(capsys.readouterr()).split("\n")
 
 
 # -----------------------------------------------------------------------------
@@ -206,13 +206,14 @@ def test_batch_command_quiet(tmpdir, capsys, fx_batch):
     pytest.dbgfunc()
     v = {'-n': False, '-q': True, '-x': True, 'COMMAND': "echo %"}
     tmppath, data = fx_batch
+    data = exp_xargs_data("", [83, 146, 205, 250])
     exp = ''
-    for chunk in data:
-        exp += re.sub('^echo ', '', chunk) + '\n'
+    for line in data:
+        exp += "{}\n".format(line)
 
     with open(tmppath, 'r') as f:
         fx.batch_command(v, [], f)
-    assert exp in "".join(capsys.readouterr())
+    assert exp.split("\n") == "".join(capsys.readouterr()).split("\n")
 
 
 # -----------------------------------------------------------------------------
@@ -560,10 +561,9 @@ def fx_batch(tmpdir):
     tmpfile = tmpdir.join('tmpfile')
     data = [str(x) + '\n' for x in range(1, 250)]
     tmpfile.write("".join(data))
-    with open(tmpfile.strpath, 'r') as f:
-        rval = fx.xargs_wrap("echo %", f)
+    rval = exp_xargs_data("echo ", [83, 147, 207, 250])
     return tmpfile.strpath, rval
-    
+
 # ---------------------------------------------------------------------------
 @pytest.fixture
 def data(tmpdir, request):

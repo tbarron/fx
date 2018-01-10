@@ -1,5 +1,6 @@
 import fx
 import glob
+import io
 import re
 import optparse
 import pexpect
@@ -82,6 +83,73 @@ def test_xw_sub(cmd, item, exp):
         assert fx.xw_sub(cmd, item) == exp
 
 
+# -----------------------------------------------------------------------------
+def test_xw_nopct_file(fx_batch):
+    """
+    Tests for xargs_wrap(cmd: str, rble: fileobj)
+
+      - cmd may contain '%', or not
+      - fileobj may be an open file, sys.stdin, a StringIO
+
+    What xargs_wrap is supposed to do, is, given a *cmd* like 'foo % bar', it
+    takes lexical items from *rble* and constructs strings of the form
+
+        'foo item1 item2 item3 ... itemn bar'
+
+    such that the strings are only minimally longer than 240 bytes. This is
+    like xargs except that I've never figured out a way to get xargs to embed
+    stuff in the middle of the command -- it only wants to put stuff at the
+    end.
+
+    If *cmd* does not contain a % character (or if all the % chars are
+    escaped), xargs_wrap should put the items at the end of cmd.
+    """
+    pytest.dbgfunc()
+    tmppath, data = fx_batch
+    with open(tmppath, 'r') as fobj:
+        result = fx.xargs_wrap("echo", fobj)
+    assert result == data
+
+
+# -----------------------------------------------------------------------------
+def test_xw_nopct_sio(fx_batch):
+    """
+    See docstring for test_xw_nopct_file above
+    """
+    pytest.dbgfunc()
+    fobj = io.StringIO("".join(["{}\n".format(idx)
+                                for idx in range(1, 250)]))
+    tmppath, data = fx_batch
+    result = fx.xargs_wrap("echo", fobj)
+    assert result == data
+
+
+# -----------------------------------------------------------------------------
+def test_xw_pct_file(fx_batch):
+    """
+    See docstring for test_xw_nopct_file above
+    """
+    pytest.dbgfunc()
+    tmppath, data = fx_batch
+    with open(tmppath, 'r') as fobj:
+        result = fx.xargs_wrap("echo %", fobj)
+
+
+# -----------------------------------------------------------------------------
+def test_xw_pct_sio(fx_batch):
+    """
+    See docstring for test_xw_nopct_file above
+    """
+    pytest.dbgfunc()
+    fobj = io.StringIO("".join(["{}\n".format(idx)
+                                for idx in range(1, 250)]))
+    tmppath, data = fx_batch
+    data = exp_xargs_data("echo ", [83, 146, 205, 250])
+    result = fx.xargs_wrap("echo %", fobj)
+    assert result == data
+
+
+# -----------------------------------------------------------------------------
 def test_batch_command_both(tmpdir, capsys, fx_batch):
     """
     Test batch_command with dryrun True and quiet True.

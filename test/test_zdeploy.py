@@ -1,3 +1,4 @@
+from fx import version
 import pytest
 skip_deployable = False
 try:

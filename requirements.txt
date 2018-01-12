@@ -1,5 +1,6 @@
 docopt
 GitPython
 py
-git+https://github.com/tbarron/tbx
+git+https://github.com/tbarron/tbx#egg=tbx
+
 

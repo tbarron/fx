@@ -174,6 +174,7 @@ def test_xargs_cmdl_stdin(tmpdir):
                      input="ls /usr/include/nfs |")
     assert result == exp
 
+
 # -----------------------------------------------------------------------------
 def test_batch_command_both(tmpdir, capsys, fx_batch):
     """
@@ -568,6 +569,7 @@ def fx_batch(tmpdir):
     tmpfile.write("".join(data))
     rval = exp_xargs_data("echo ", [83, 147, 207, 250])
     return tmpfile.strpath, rval
+
 
 # ---------------------------------------------------------------------------
 @pytest.fixture

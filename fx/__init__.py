@@ -169,6 +169,7 @@ def xargs_wrap(cmd, rble):
     Do xargs wrapping to cmd, distributing args from file rble across
     command lines.
     """
+    clean = lambda x: re.sub(r'\s*%(\s*)', r'\1', x)
     tcmd = cmd
     rval = []
     for line in rble:
@@ -176,12 +177,12 @@ def xargs_wrap(cmd, rble):
             tcmd = xw_sub(tcmd, item.strip())
             pending = True
             if 240 < len(tcmd):
-                tcmd = re.sub(r'\s*%\s*', '', tcmd)
+                tcmd = clean(tcmd)
                 rval.append(tcmd)
                 pending = False
                 tcmd = cmd
     if pending:
-        tcmd = re.sub(r'\s*%\s*', '', tcmd)
+        tcmd = clean(tcmd)
         rval.append(tcmd)
     return(rval)
 

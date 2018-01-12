@@ -9,6 +9,15 @@ import pytest
 
 
 # -----------------------------------------------------------------------------
+def test_flake():
+    """
+    Vet the code quality
+    """
+    result = tbx.run("flake8 fx test")
+    assert result == ""
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd, item, exp", [
     ('/home/dir/one ~/%', 'two', '/home/dir/one /home/dir/two /home/dir/%'),
     ('~/%', 'one', '/home/dir/one /home/dir/%'),

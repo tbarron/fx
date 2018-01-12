@@ -63,7 +63,6 @@ def main():
     opts = docopt.docopt(__doc__)
     if opts['-d']:
         pdb.set_trace()
-    print(opts)
 
     if opts['-e']:
         subst_rename(opts)

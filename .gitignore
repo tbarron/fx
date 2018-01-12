@@ -4,4 +4,6 @@ DODO
 __pycache__
 fx.egg-info
 venv
+\#*
+.\#*
 *~

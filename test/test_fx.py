@@ -152,6 +152,18 @@ def test_xw_pct_sio(fx_batch):
 
 
 # -----------------------------------------------------------------------------
+def test_xargs_cmdl_stdin(tmpdir):
+    """
+    Run 'ls /usr/include/nfs | fx -n -x -c "echo foo % bar"'
+
+    Expected output: 'foo <file> <file> <file> ... <file> bar'
+    """
+    pytest.dbgfunc()
+    result = tbx.run("fx -n -x -c \"echo foo % bar\"",
+                     input="ls /usr/include/nfs |")
+    assert result != ""
+
+# -----------------------------------------------------------------------------
 def test_batch_command_both(tmpdir, capsys, fx_batch):
     """
     Test batch_command with dryrun True and quiet True.

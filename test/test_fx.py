@@ -159,9 +159,11 @@ def test_xargs_cmdl_stdin(tmpdir):
     Expected output: 'foo <file> <file> <file> ... <file> bar'
     """
     pytest.dbgfunc()
+    flist = tbx.run("ls /usr/include/nfs").decode().strip().replace("\n", " ")
+    exp = "would do 'echo foo " + flist + " bar'\n"
     result = tbx.run("fx -n -x -c \"echo foo % bar\"",
-                     input="ls /usr/include/nfs |")
-    assert result != ""
+                     input="ls /usr/include/nfs |").decode()
+    assert result == exp
 
 # -----------------------------------------------------------------------------
 def test_batch_command_both(tmpdir, capsys, fx_batch):

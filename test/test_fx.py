@@ -2,10 +2,8 @@ import fx
 import glob
 import io
 import re
-import optparse
 import os
 import pexpect
-import py
 import tbx
 import pytest
 

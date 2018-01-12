@@ -131,8 +131,10 @@ def test_xw_pct_file(fx_batch):
     """
     pytest.dbgfunc()
     tmppath, data = fx_batch
+    data = exp_xargs_data("echo ", [83, 146, 205, 250])
     with open(tmppath, 'r') as fobj:
         result = fx.xargs_wrap("echo %", fobj)
+    assert result == data
 
 
 # -----------------------------------------------------------------------------

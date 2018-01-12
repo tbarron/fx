@@ -75,7 +75,7 @@ def main():
 
 
 # ---------------------------------------------------------------------------
-def batch_command(options, arglist, rble=sys.stdin):
+def batch_command(options, arglist=None, rble=sys.stdin):
     """
     Bundle arguments into command lines similarly to xargs.
 

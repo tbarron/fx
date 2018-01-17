@@ -132,14 +132,18 @@ fn cmd(command: &str, items: &[&str]) {
     println!("cmd('{}', {:?})", command, items);
 }
 
-// desc
+// ----------------------------------------------------------------------------
+// Apply a substitute expression to a set of file names and possibly
+// rename the files
 fn rename() {
 }
 
+// ----------------------------------------------------------------------------
 // desc
 fn range() {
 }
 
+// ----------------------------------------------------------------------------
 // desc
 fn xargs() {
 }

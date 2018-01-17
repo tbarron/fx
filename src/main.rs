@@ -2,6 +2,7 @@ extern crate clap;
 use clap::{App, SubCommand, Arg};
 
 mod ascii;
+mod mag;
 mod odx;
 
 // ----------------------------------------------------------------------------
@@ -31,7 +32,12 @@ fn main() {
                    )
         .subcommand(SubCommand::with_name("mag")
                     .about("report the size of a number (needs work)")
-                   )
+                    .arg(Arg::with_name("number")
+                         .help("values to be assessed")
+                         .required(true)
+                         .min_values(1)
+                        )
+                    )
         .subcommand(SubCommand::with_name("odx")
                     .about("report hex, octal, binary values")
                         .arg(Arg::with_name("number")
@@ -112,6 +118,12 @@ fn main() {
     } else if matches.is_present("rename") {
         println!("Work needed for rename");
         rename();
+    } else if matches.is_present("mag") {
+        if let Some(matches) = matches.subcommand_matches("mag") {
+            let values: Vec<_> = matches.values_of("number")
+                .unwrap().collect();
+            mag::mag(&values);
+        }
     } else if matches.is_present("range") {
         println!("Work needed for range");
         range();

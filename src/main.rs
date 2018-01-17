@@ -1,6 +1,7 @@
 extern crate clap;
 use clap::{App, SubCommand, Arg};
 
+mod ascii;
 fn main() {
     let matches = App::new("fx")
         .version("0.0.1")
@@ -83,7 +84,7 @@ fn main() {
         .get_matches();
 
     if matches.is_present("ascii") {
-        ascii();
+        ascii::ascii();
     } else if matches.is_present("odx") {
         if let Some(matches) = matches.subcommand_matches("odx") {
             let values: Vec<_> = matches.values_of("number")
@@ -106,36 +107,6 @@ fn main() {
     } else if matches.is_present("xargs") {
         println!("Work needed for xargs");
         xargs();
-    }
-}
-
-// Display the ascii code table
-fn ascii() {
-    let mut line = String::from("");
-    let names = ["NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL",
-                 "BS",  "TAB", "LF",  "VT",  "FF",  "CR",  "SO",  "SI",
-                 "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB",
-                 "CAN", "EM",  "SUB", "ESC", "FS",  "GS",  "RS",  "US",
-                 "SPC"];
-    let mut ldx = 0;
-    let mut ord: usize;
-    while ldx < 0x80 {
-        for off in 0..8 {
-            ord = ldx + off;
-            if ord <= 0x20 {
-                let prt = names[ord];
-                line = format!("{0}0x{1:02x} {chr:<wid$} ",
-                               line, ord, chr=prt, wid=3);
-            } else if ord < 0x7f {
-                let charval: u8 = ord as u8;
-                let prt = charval as char;
-                line = format!("{0}0x{1:02x} {chr:<wid$} ",
-                               line, ord, chr=prt, wid=3);
-            }
-        }
-        println!("{}", line);
-        line = String::from("");
-        ldx += 8;
     }
 }
 

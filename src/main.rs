@@ -102,12 +102,6 @@ fn main() {
 
     if matches.is_present("ascii") {
         ascii::ascii();
-    } else if matches.is_present("odx") {
-        if let Some(matches) = matches.subcommand_matches("odx") {
-            let values: Vec<_> = matches.values_of("number")
-                .unwrap().collect();
-            odx::odx(&values);
-        }
     } else if matches.is_present("cmd") {
         if let Some(matches) = matches.subcommand_matches("cmd") {
             let command = matches.value_of("command").unwrap();
@@ -115,18 +109,24 @@ fn main() {
                 .unwrap().collect();
             cmd(command, &items);
         }
-    } else if matches.is_present("rename") {
-        println!("Work needed for rename");
-        rename();
     } else if matches.is_present("mag") {
         if let Some(matches) = matches.subcommand_matches("mag") {
             let values: Vec<_> = matches.values_of("number")
                 .unwrap().collect();
             mag::mag(&values);
         }
+    } else if matches.is_present("odx") {
+        if let Some(matches) = matches.subcommand_matches("odx") {
+            let values: Vec<_> = matches.values_of("number")
+                .unwrap().collect();
+            odx::odx(&values);
+        }
     } else if matches.is_present("range") {
         println!("Work needed for range");
         range();
+    } else if matches.is_present("rename") {
+        println!("Work needed for rename");
+        rename();
     } else if matches.is_present("xargs") {
         println!("Work needed for xargs");
         xargs();

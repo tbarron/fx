@@ -2,6 +2,9 @@ extern crate clap;
 use clap::{App, SubCommand, Arg};
 
 mod ascii;
+mod odx;
+
+// ----------------------------------------------------------------------------
 fn main() {
     let matches = App::new("fx")
         .version("0.0.1")
@@ -9,14 +12,6 @@ fn main() {
         .about("Command line effects (fx, get it?)")
         .subcommand(SubCommand::with_name("ascii")
                     .about("show the ascii code table")
-                   )
-        .subcommand(SubCommand::with_name("odx")
-                    .about("report hex, octal, binary values")
-                    .arg(Arg::with_name("number")
-                         .help("value to convert")
-                         .required(true)
-                         .min_values(1)
-                        )
                    )
         .subcommand(SubCommand::with_name("cmd")
                     .about("replace % with arguments")
@@ -89,7 +84,7 @@ fn main() {
         if let Some(matches) = matches.subcommand_matches("odx") {
             let values: Vec<_> = matches.values_of("number")
                 .unwrap().collect();
-            odx(&values);
+            odx::odx(&values);
         }
     } else if matches.is_present("cmd") {
         if let Some(matches) = matches.subcommand_matches("cmd") {
@@ -110,11 +105,7 @@ fn main() {
     }
 }
 
-// Report each value in the array in hex, decimal, octal, and binary format
-fn odx(values: &[&str]) {
-    println!("values to convert: {:?}", values);
-}
-
+// ----------------------------------------------------------------------------
 // Run *command* once for each element in *items*, with the '%' in
 // command replaced with the element
 fn cmd(command: &str, items: &[&str]) {

@@ -121,6 +121,7 @@ fn main() {
     } else {
         println!("    A subcommand is required.\n");
         app.print_help().expect("print failure");
+        println!("");
     }
 }
 

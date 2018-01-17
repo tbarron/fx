@@ -6,7 +6,7 @@ mod odx;
 
 // ----------------------------------------------------------------------------
 fn main() {
-    let matches = App::new("fx")
+    let mut app = App::new("fx")
         .version("0.0.1")
         .author("Tom Barron <tusculum@gmail.com>")
         .about("Command line effects (fx, get it?)")
@@ -87,8 +87,8 @@ fn main() {
                          .help("string with '%'")
                          .required(true)
                         )
-                   )
-        .get_matches();
+                   );
+    let matches = app.clone().get_matches();
 
     if matches.is_present("ascii") {
         ascii::ascii();
@@ -114,6 +114,9 @@ fn main() {
     } else if matches.is_present("xargs") {
         println!("Work needed for xargs");
         xargs();
+    } else {
+        println!("    A subcommand is required.\n");
+        app.print_help().expect("print failure");
     }
 }
 

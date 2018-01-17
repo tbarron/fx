@@ -1,5 +1,32 @@
+// ----------------------------------------------------------------------------
 pub fn mag(values: &[&str]) {
-    println!("This is the mag module: {:?}", values)
+    for value in values {
+        println!("{}", mag_value(value));
+    }
+}
+
+// ----------------------------------------------------------------------------
+fn to_float(val: &str) -> f64 {
+    let val: String = val.replace("_", "");
+    let val: f64 = match val.trim().parse() {
+        Ok(num) => { num }
+        Err(_)  => { println!("bad value: {}", val); 0.0 }
+    };
+    val
+}
+
+// ----------------------------------------------------------------------------
+fn mag_value(val: &str) -> String {
+    let mut idx = 0;
+    let mut val: f64 = to_float(val);
+    let sizes = ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"];
+    while 1000.0 < val {
+        idx += 1;
+        val /= 1000.0;
+    };
+    format!("{:.*} {}", 3, val, sizes[idx])
+}
+
 // ----------------------------------------------------------------------------
 #[cfg(test)]
 mod tests {

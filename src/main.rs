@@ -41,7 +41,7 @@ fn main() {
                         )
                    )
         .subcommand(SubCommand::with_name("mag")
-                    .about("report the size of a number (needs work)")
+                    .about("report the size of a number")
                     .arg(Arg::with_name("number")
                          .help("values to be assessed")
                          .required(true)

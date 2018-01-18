@@ -6,6 +6,7 @@ use std::io::prelude::*;
 use std::path::Path;
 
 mod ascii;
+mod cmd;
 mod mag;
 mod odx;
 
@@ -116,7 +117,7 @@ fn main() {
             let command = matches.value_of("command").unwrap();
             let items: Vec<_> = matches.values_of("items")
                 .unwrap().collect();
-            cmd(command, &items);
+            cmd::cmd(command, &items);
         }
     } else if matches.is_present("mag") {
         if let Some(matches) = matches.subcommand_matches("mag") {
@@ -144,13 +145,6 @@ fn main() {
         app.print_help().expect("print failure");
         println!("");
     }
-}
-
-// ----------------------------------------------------------------------------
-// Run *command* once for each element in *items*, with the '%' in
-// command replaced with the element
-fn cmd(command: &str, items: &[&str]) {
-    println!("cmd('{}', {:?})", command, items);
 }
 
 // ----------------------------------------------------------------------------

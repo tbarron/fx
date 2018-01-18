@@ -165,4 +165,34 @@ fn range() {
 fn xargs() {
 }
 
+// ----------------------------------------------------------------------------
+fn _get_cargo_version() -> String {
+    let path = Path::new("Cargo.toml");
+    let display = path.display();
+    let mut file = match File::open(&path) {
+        Err(why) => panic!("couldn't open {}: {}",
+                           display,
+                           why.description()),
+        Ok(file) => file,
+    };
+
+    let mut s: String = String::new();
+    match file.read_to_string(&mut s) {
+        Err(why) => panic!("couldn't read {}: {}",
+                           display,
+                           why.description()),
+        Ok(_num) => (),
+    }
+
+    let mut rval = String::new();
+    for line in s.lines() {
+        if line.contains("version") {
+            let pieces: Vec<&str> = line.split("\"").collect();
+            rval.push_str(pieces[1]);
+            break;
+        }
+    }
+    rval
+}
+
 

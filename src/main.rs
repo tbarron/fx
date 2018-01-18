@@ -10,8 +10,9 @@ fn version() -> &'static str {
     "0.0.2"
 }
 
+// ----------------------------------------------------------------------------
 fn main() {
-    let mut app = App::new("fx").version("0.0.1")
+    let mut app = App::new("fx").version(version())
         .author("Tom Barron <tusculum@gmail.com>")
         .about("Command line effects (fx, get it?)")
         .subcommand(SubCommand::with_name("ascii")

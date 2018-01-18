@@ -1,5 +1,9 @@
 extern crate clap;
 use clap::{App, SubCommand, Arg};
+use std::error::Error;
+use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
 
 mod ascii;
 mod mag;

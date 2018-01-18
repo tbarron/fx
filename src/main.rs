@@ -195,4 +195,14 @@ fn _get_cargo_version() -> String {
     rval
 }
 
+// ----------------------------------------------------------------------------
+#[cfg(test)]
+mod tests {
+    use super::*;
 
+    // ------------------------------------------------------------------------
+    #[test]
+    fn test_cargo_version() {
+        assert_eq!(version(), _get_cargo_version());
+    }
+}

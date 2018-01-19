@@ -4,6 +4,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use std::process::Command;
 
 mod ascii;
 mod cmd;
@@ -202,6 +203,27 @@ fn _get_cargo_version() -> String {
         }
     }
     rval
+}
+
+// ----------------------------------------------------------------------------
+fn would_do(cmd: &String) {
+    println!("would do '{}'", cmd);
+}
+
+// ----------------------------------------------------------------------------
+fn run(cmd: &String) {
+    let mut cvec: Vec<String> = Vec::new();
+    for item in cmd.split(" ") {
+        cvec.push(String::from(item));
+    }
+    if let Ok(mut child) = Command::new(&cvec[0])
+        .args(&cvec[1..])
+        .spawn() {
+        child.wait()
+            .expect(format!("failure running '{}'", cmd).as_str());
+    } else {
+        println!("'{}' never started", cmd);
+    }
 }
 
 // ----------------------------------------------------------------------------

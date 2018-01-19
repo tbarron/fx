@@ -1,19 +1,13 @@
-use std::process::Command;
+//use std::process::Command;
+use super::*;
 
 // ----------------------------------------------------------------------------
-pub fn cmd(command: &str, items: &[&str]) {
+pub fn cmd(dryrun: bool, command: &str, items: &[&str]) {
     for filled in _cmdlist(command, items) {
-        let mut cvec: Vec<String> = Vec::new();
-        for item in filled.split(" ") {
-            cvec.push(String::from(item));
-        }
-        if let Ok(mut child) = Command::new(&cvec[0])
-            .args(&cvec[1..])
-            .spawn() {
-            child.wait()
-                .expect(format!("failure running '{}'", filled).as_str());
+        if dryrun {
+            would_do(&filled);
         } else {
-            println!("'{}' never started", filled);
+            run(&filled);
         }
     }
 }

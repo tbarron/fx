@@ -85,7 +85,6 @@ fn main() {
                          .value_name("zeropad")
                          .short("z")
                          .long("zpad")
-                         .required(true)
                          .takes_value(true)
                         )
                    )
@@ -149,7 +148,10 @@ fn main() {
             let dryrun = matches.is_present("dryrun");
             let rcmd = matches.value_of("rcmd").unwrap();
             let lohigh = matches.value_of("lohigh").unwrap();
-            let zpad: usize = matches.value_of("zeropad").unwrap().parse().unwrap();
+            let zpad: usize = match matches.value_of("zeropad") {
+                Some(x) => x.parse().unwrap(),
+                None => 0,
+            };
             range::range(dryrun, rcmd, lohigh, zpad);
         }
     } else if matches.is_present("rename") {

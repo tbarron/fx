@@ -7,10 +7,14 @@ pub fn cmd(command: &str, items: &[&str]) {
         for item in filled.split(" ") {
             cvec.push(String::from(item));
         }
-        let _output = Command::new(&cvec[0])
+        if let Ok(mut child) = Command::new(&cvec[0])
             .args(&cvec[1..])
-            .spawn()
-            .expect(format!("failure running '{}'", filled).as_str());
+            .spawn() {
+            child.wait()
+                .expect(format!("failure running '{}'", filled).as_str());
+        } else {
+            println!("'{}' never started", filled);
+        }
     }
 }
 

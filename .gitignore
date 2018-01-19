@@ -1,4 +1,6 @@
+.cache
 .env
+__pycache__
 DODO
 target
 *~

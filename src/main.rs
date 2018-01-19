@@ -80,6 +80,14 @@ fn main() {
                          .required(true)
                          .takes_value(true)
                         )
+                    .arg(Arg::with_name("zeropad")
+                         .help("zero fill to N columns")
+                         .value_name("zeropad")
+                         .short("z")
+                         .long("zpad")
+                         .required(true)
+                         .takes_value(true)
+                        )
                    )
         .subcommand(SubCommand::with_name("rename")
                     .about("rename files based on a s/foo/bar/ expr \
@@ -140,7 +148,8 @@ fn main() {
             let dryrun = matches.is_present("dryrun");
             let rcmd = matches.value_of("rcmd").unwrap();
             let lohigh = matches.value_of("lohigh").unwrap();
-            range::range(dryrun, rcmd, lohigh);
+            let zpad: usize = matches.value_of("zeropad").unwrap().parse().unwrap();
+            range::range(dryrun, rcmd, lohigh, zpad);
         }
     } else if matches.is_present("rename") {
         println!("Work needed for rename");

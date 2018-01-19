@@ -1,10 +1,10 @@
 use std::process::Command;
 
 // ----------------------------------------------------------------------------
-pub fn range(dryrun: bool, rcmd: &str, lohigh: &str) {
+pub fn range(dryrun: bool, rcmd: &str, lohigh: &str, zpad: usize) {
     // split up the low:high range string
     let tup: (i32, i32) = get_low_high(&lohigh);
-    let cmds = _rnglist(rcmd, tup.0, tup.1);
+    let cmds = _rnglist(rcmd, zpad, tup.0, tup.1);
     for cmd in cmds {
         if dryrun {
             println!("would do '{}'", cmd);
@@ -15,10 +15,10 @@ pub fn range(dryrun: bool, rcmd: &str, lohigh: &str) {
 }
 
 // ----------------------------------------------------------------------------
-fn _rnglist(cmd: &str, low: i32, high: i32) -> Vec<String> {
+fn _rnglist(cmd: &str, _zpad: usize, low: i32, high: i32) -> Vec<String> {
     let mut rvec: Vec<String> = Vec::new();
     for num in low .. high {
-        let num_s = format!("{}", num);
+        let num_s = format!("{:0zpad$}", num, zpad=_zpad);
         let full = String::from(cmd.replace('%', num_s.as_str()));
         rvec.push(full)
     }
@@ -83,8 +83,16 @@ mod tests {
     // ------------------------------------------------------------------------
     #[test]
     fn test_rng_make_list() {
-        assert_eq!(_rnglist("echo %", 7, 13),
+        assert_eq!(_rnglist("echo %", 0, 7, 13),
                    ["echo 7", "echo 8", "echo 9", "echo 10", "echo 11",
+                    "echo 12", ]);
+    }
+
+    // ------------------------------------------------------------------------
+    #[test]
+    fn test_rng_make_list_zpad() {
+        assert_eq!(_rnglist("echo %", 2, 7, 13),
+                   ["echo 07", "echo 08", "echo 09", "echo 10", "echo 11",
                     "echo 12", ]);
     }
 }

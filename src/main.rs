@@ -25,7 +25,7 @@ fn main() {
                     .about("show the ascii code table")
                        )
         .subcommand(SubCommand::with_name("cmd")
-                    .about("replace % with arguments (needs work)")
+                    .about("replace % with arguments")
                     .arg(Arg::with_name("dryrun")
                          .short("n")
                              .long("dryrun")
@@ -61,8 +61,7 @@ fn main() {
                     .about("report errno values and meanings (needs work)")
                    )
         .subcommand(SubCommand::with_name("range")
-                    .about("replace % in command with nums from range \
-                           (needs work)")
+                    .about("replace % in command with nums from range")
                     .arg(Arg::with_name("dryrun")
                          .short("n")
                          .long("dryrun")

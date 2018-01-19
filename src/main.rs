@@ -9,6 +9,7 @@ mod ascii;
 mod cmd;
 mod mag;
 mod odx;
+mod range;
 
 // ----------------------------------------------------------------------------
 fn version() -> &'static str {
@@ -67,12 +68,11 @@ fn main() {
                          .long("dryrun")
                          .help("report what would happen without acting")
                         )
-                    .arg(Arg::with_name("command")
+                    .arg(Arg::with_name("rcmd")
                          .help("string with '%'")
                          .required(true)
                         )
                     .arg(Arg::with_name("lohigh")
-                         .short("i")
                          .help("low:high range from low to high-1")
                          .required(true)
                         )
@@ -132,8 +132,12 @@ fn main() {
             odx::odx(&values);
         }
     } else if matches.is_present("range") {
-        println!("Work needed for range");
-        range();
+        if let Some(matches) = matches.subcommand_matches("range") {
+            let dryrun = matches.is_present("dryrun");
+            let rcmd = matches.value_of("rcmd").unwrap();
+            let lohigh = matches.value_of("lohigh").unwrap();
+            range::range(dryrun, rcmd, lohigh);
+        }
     } else if matches.is_present("rename") {
         println!("Work needed for rename");
         rename();
@@ -151,11 +155,6 @@ fn main() {
 // Apply a substitute expression to a set of file names and possibly
 // rename the files
 fn rename() {
-}
-
-// ----------------------------------------------------------------------------
-// desc
-fn range() {
 }
 
 // ----------------------------------------------------------------------------

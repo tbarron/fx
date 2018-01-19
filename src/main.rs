@@ -126,10 +126,11 @@ fn main() {
         ascii::ascii();
     } else if matches.is_present("cmd") {
         if let Some(matches) = matches.subcommand_matches("cmd") {
+            let dryrun = matches.is_present("dryrun");
             let command = matches.value_of("command").unwrap();
             let items: Vec<_> = matches.values_of("items")
                 .unwrap().collect();
-            cmd::cmd(command, &items);
+            cmd::cmd(dryrun, command, &items);
         }
     } else if matches.is_present("mag") {
         if let Some(matches) = matches.subcommand_matches("mag") {

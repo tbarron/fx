@@ -1,4 +1,5 @@
 use std::process::Command;
+use super::*;
 
 // ----------------------------------------------------------------------------
 pub fn range(dryrun: bool, rcmd: &str, lohigh: &str, zpad: usize) {
@@ -7,7 +8,7 @@ pub fn range(dryrun: bool, rcmd: &str, lohigh: &str, zpad: usize) {
     let cmds = _rnglist(rcmd, zpad, tup.0, tup.1);
     for cmd in cmds {
         if dryrun {
-            println!("would do '{}'", cmd);
+            would_do(&cmd);
         } else {
             run(&cmd);
         }

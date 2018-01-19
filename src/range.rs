@@ -28,8 +28,14 @@ fn _rnglist(cmd: &str, low: i32, high: i32) -> Vec<String> {
 // ----------------------------------------------------------------------------
 fn get_low_high(lowhigh: &str) -> (i32, i32) {
     let mut rvec: Vec<String> = Vec::new();
-    for item in lowhigh.split(":") {
-        rvec.push(String::from(item))
+    if lowhigh.contains(":") {
+        for item in lowhigh.split(":") {
+            rvec.push(String::from(item))
+        }
+    } else if lowhigh.contains("..") {
+        for item in lowhigh.split("..") {
+            rvec.push(String::from(item))
+        }
     }
     let low: i32 = rvec[0].parse::<i32>().unwrap();
     let high: i32 = rvec[1].parse::<i32>().unwrap();
@@ -57,6 +63,22 @@ fn run(cmd: &String) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ------------------------------------------------------------------------
+    #[test]
+    fn test_rng_glh_colon() {
+        let tup: (i32, i32) = get_low_high("5:9");
+        assert_eq!(tup.0, 5);
+        assert_eq!(tup.1, 9);
+    }
+
+    // ------------------------------------------------------------------------
+    #[test]
+    fn test_rng_glh_dotdot() {
+        let tup: (i32, i32) = get_low_high("18..27");
+        assert_eq!(tup.0, 18);
+        assert_eq!(tup.1, 27);
+    }
 
     // ------------------------------------------------------------------------
     #[test]

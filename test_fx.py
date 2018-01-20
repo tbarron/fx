@@ -11,6 +11,39 @@ def test_cargo_test():
 
 
 # -----------------------------------------------------------------------------
+def test_cmd_command_required():
+    """
+    Verify that 'fx cmd' requires a command string
+    """
+    cmd = "fx cmd"
+    result = runcmd(cmd)
+    exp = ["error:",
+           "The following required arguments were not provided",
+           "<command>",
+           "<items>",
+           "fx cmd [FLAGS] <command> <items>...",
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
+def test_cmd_items_required():
+    """
+    Verify that 'fx cmd <command>' complains about missing items
+    """
+    cmd = "fx cmd \"echo foo % bar\""
+    result = runcmd(cmd)
+    exp = ["error:",
+           "The following required arguments were not provided",
+           "<items>",
+           "fx cmd [FLAGS] <command> <items>...",
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd", [
     "fx cmd \"echo foo % bar\" one two three --dryrun",
     "fx cmd --dryrun \"echo foo % bar\" one two three",

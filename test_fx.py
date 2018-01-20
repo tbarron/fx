@@ -110,6 +110,38 @@ def test_range_verbose_supported(cmd, xbody):
 
 
 # -----------------------------------------------------------------------------
+def test_range_command_required():
+    """
+    Verify that 'fx range' complains about the absence of any command string
+    """
+    cmd = "fx range"
+    result = runcmd(cmd)
+    exp = ["error: The following required arguments were not provided",
+           "<command>",
+           "--interval <interval>",
+           "<items>",
+           "fx range [FLAGS] [OPTIONS] <command> --interval <interval>"
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
+def test_range_interval_required():
+    """
+    Verify that 'fx range <cmd>' complains about the absence of -i/--interval
+    """
+    cmd = "fx range \"echo foo %\""
+    result = runcmd(cmd)
+    exp = ["error: The following required arguments were not provided",
+           "--interval <interval>",
+           "fx range [FLAGS] [OPTIONS] <command> --interval <interval>"
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd, xbody", [
     ("fx range \"echo foo % bar\" -i 10..15 -z 3", "foo {:03d} bar\r\n"),
     ("fx range -z 4 \"echo foo % bar\" -i 10..15", "foo {:04d} bar\r\n"),

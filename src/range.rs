@@ -10,6 +10,9 @@ pub fn range(dryrun: bool, rcmd: &str, lohigh: &str, zpad: usize) {
         if dryrun {
             would_do(&cmd);
         } else {
+            if verbose {
+                println!("> {}", &cmd);
+            }
             run(&cmd);
         }
     }

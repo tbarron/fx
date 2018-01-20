@@ -48,14 +48,8 @@ def test_cmd_supports_n_before():
     ])
 def test_cmd_verbose_supported(cmd):
     """
-    Verify that 'fx cmd' supports -n before the command
     Verify that 'fx cmd' supports the verbose option in various positions
     """
-    cmd = "fx cmd -n \"echo foo % bar\" one two three"
-    result = pexpect.run(cmd).decode()
-    exp = "".join(["would do 'echo foo {} bar'\r\n".format(x)
-                   for x in ["one", "two", "three"]])
-    assert exp == result
     result = runcmd(cmd)
     arglist = ["one", "two", "three"]
     body = "> echo foo {0} bar\r\nfoo {0} bar\r\n"

@@ -72,6 +72,10 @@ fn main() {
                          .short("n")
                          .long("dryrun")
                          .help("report what would happen without acting")
+                    .arg(Arg::with_name("verbose")
+                         .help("show command before running it")
+                         .short("v")
+                         .long("verbose")
                         )
                     .arg(Arg::with_name("rcmd")
                          .help("string with '%'")
@@ -159,6 +163,8 @@ fn main() {
                 None => 0,
             };
             range::range(dryrun, rcmd, lohigh, zpad);
+            let verbose = matches.is_present("verbose");
+            range::range(dryrun, verbose, rcmd, lohigh, zpad);
         }
     } else if matches.is_present("rename") {
         println!("Work needed for rename");

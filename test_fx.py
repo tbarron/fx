@@ -28,9 +28,9 @@ def test_cmd_dryrun_supported(cmd):
 
 
 # -----------------------------------------------------------------------------
-def test_cmd_dryrun_verbose_optional():
+def test_cmd_optionals():
     """
-    Verify that 'fx cmd' makes dryrun optional
+    Verify that 'fx cmd' makes dryrun and verbose optional
     """
     result = runcmd("fx cmd \"echo foo % bar\" one two three")
     exp = "".join(["foo {} bar\r\n".format(x)
@@ -81,15 +81,19 @@ def test_range_verbose_supported(cmd, xbody):
     ("fx range --zpad 6 \"echo foo % bar\" -i 10..15", "foo {:06d} bar\r\n"),
     ])
 def test_range_zpad_supported(cmd, xbody):
+    """
+    Verify that option -z/--zpad is supported in various positions
+    """
     result = runcmd(cmd)
     exp = "".join([xbody.format(x) for x in range(10, 15)])
     assert result == exp
 
 
 # -----------------------------------------------------------------------------
-def test_zpad_optional():
+def test_range_optionals():
     """
-    Run 'fx range' without the -z / --zpad option to verify it's not required
+    Run 'fx range' without the -z / --zpad option to verify it's not required.
+    Also verifies that verbose and dryrun are optional
     """
     cmd = "fx range \"echo foo % bar\" -i 10..15"
     result = runcmd(cmd)

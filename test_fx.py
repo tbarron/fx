@@ -8,6 +8,7 @@ def test_cargo_test():
     """
     result = runcmd("cargo test")
     assert "panic" not in result
+    assert "error" not in result
 
 
 # -----------------------------------------------------------------------------

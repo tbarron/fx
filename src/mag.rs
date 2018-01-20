@@ -1,10 +1,32 @@
 use std::num::ParseFloatError;
 
 // ----------------------------------------------------------------------------
-pub fn mag(values: &[&str]) {
+pub fn mag(binary: bool, values: &[&str]) {
     for value in values {
-        print_mag(mag_value(value));
+        if binary {
+            print_mag(mag_value(value, 1024.0, binary_names()));
+        } else {
+            print_mag(mag_value(value, 1000.0, si_names()));
+        }
     }
+}
+
+// ----------------------------------------------------------------------------
+fn binary_names() -> Vec<String> {
+    let mut rval: Vec<String> = [].to_vec();
+    for name in ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"].iter() {
+        rval.push(String::from(*name));
+    }
+    rval
+}
+
+// ----------------------------------------------------------------------------
+fn si_names() -> Vec<String> {
+    let mut rval: Vec<String> = [].to_vec();
+    for name in ["", "K", "M", "G", "T", "P", "E", "Z", "Y"].iter() {
+        rval.push(String::from(*name));
+    }
+    rval
 }
 
 // ----------------------------------------------------------------------------
@@ -23,18 +45,18 @@ fn to_float(val: &str) -> Result<f64, ParseFloatError> {
 }
 
 // ----------------------------------------------------------------------------
-fn mag_value(val: &str) -> Result<String, ParseFloatError> {
+fn mag_value(val: &str, divisor: f64, namelist: Vec<String>)
+             -> Result<String, ParseFloatError> {
     let mut idx = 0;
     let mut val: f64 = match to_float(val) {
         Ok(num) => num,
         Err(e)  => return Err(e),
     };
-    let sizes = ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"];
-    while 1000.0 < val {
+    while divisor < val {
         idx += 1;
-        val /= 1000.0;
+        val /= divisor;
     };
-    Ok(format!("{:.*} {}", 3, val, sizes[idx]))
+    Ok(format!("{:.*} {}", 3, val, namelist[idx]))
 }
 
 // ----------------------------------------------------------------------------
@@ -54,16 +76,33 @@ mod tests {
     // ------------------------------------------------------------------------
     #[test]
     fn test_mag_no_underscore() {
-        assert_eq!(mag_value("1241"), Ok(String::from("1.241 Kb")));
-        assert_eq!(mag_value("1241995"), Ok(String::from("1.242 Mb")));
-        assert_eq!(mag_value("1249900000"), Ok(String::from("1.250 Gb")));
+        assert_eq!(mag_value("1241", 1000.0, si_names()),
+                   Ok(String::from("1.241 K")));
+        assert_eq!(mag_value("1241995", 1000.0, si_names()),
+                   Ok(String::from("1.242 M")));
+        assert_eq!(mag_value("1249900000", 1000.0, si_names()),
+                   Ok(String::from("1.250 G")));
     }
 
     // ------------------------------------------------------------------------
     #[test]
     fn test_mag_underscore() {
-        assert_eq!(mag_value("1_241"), Ok(String::from("1.241 Kb")));
-        assert_eq!(mag_value("1_241_700"), Ok(String::from("1.242 Mb")));
-        assert_eq!(mag_value("1_241_000_000"), Ok(String::from("1.241 Gb")));
+        assert_eq!(mag_value("1_241", 1000.0, si_names()),
+                   Ok(String::from("1.241 K")));
+        assert_eq!(mag_value("1_241_700", 1000.0, si_names()),
+                   Ok(String::from("1.242 M")));
+        assert_eq!(mag_value("1_241_000_000", 1000.0, si_names()),
+                   Ok(String::from("1.241 G")));
+    }
+
+    // ------------------------------------------------------------------------
+    #[test]
+    fn test_mag_binary() {
+        assert_eq!(mag_value("1_241", 1024.0, binary_names()),
+                   Ok(String::from("1.212 Kb")));
+        assert_eq!(mag_value("1_241_700", 1024.0, binary_names()),
+                   Ok(String::from("1.184 Mb")));
+        assert_eq!(mag_value("1_241_000_000", 1024.0, binary_names()),
+                   Ok(String::from("1.156 Gb")));
     }
 }

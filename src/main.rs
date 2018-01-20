@@ -50,6 +50,11 @@ fn main() {
                    )
         .subcommand(SubCommand::with_name("mag")
                     .about("report the size of a number")
+                    .arg(Arg::with_name("binary")
+                         .help("Use divisor 1024")
+                         .short("b")
+                         .long("binary")
+                        )
                     .arg(Arg::with_name("number")
                          .help("values to be assessed")
                          .required(true)
@@ -147,7 +152,8 @@ fn main() {
         if let Some(matches) = matches.subcommand_matches("mag") {
             let values: Vec<_> = matches.values_of("number")
                 .unwrap().collect();
-            mag::mag(&values);
+            let binary = matches.is_present("binary");
+            mag::mag(binary, &values);
         }
     } else if matches.is_present("odx") {
         if let Some(matches) = matches.subcommand_matches("odx") {

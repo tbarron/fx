@@ -28,10 +28,10 @@ fn main() {
         .subcommand(SubCommand::with_name("cmd")
                     .about("replace % with arguments")
                     .arg(Arg::with_name("dryrun")
+                         .help("report what would happen without acting")
                          .short("n")
-                             .long("dryrun")
-                             .help("report what would happen without acting")
-                            )
+                         .long("dryrun")
+                        )
                     .arg(Arg::with_name("verbose")
                          .help("show command before running it")
                          .short("v")
@@ -130,11 +130,10 @@ fn main() {
         ascii::ascii();
     } else if matches.is_present("cmd") {
         if let Some(matches) = matches.subcommand_matches("cmd") {
-            let dryrun = matches.is_present("dryrun");
             let command = matches.value_of("command").unwrap();
             let items: Vec<_> = matches.values_of("items")
                 .unwrap().collect();
-            cmd::cmd(dryrun, command, &items);
+            let dryrun = matches.is_present("dryrun");
             let verbose = matches.is_present("verbose");
             cmd::cmd(dryrun, verbose, command, &items);
         }

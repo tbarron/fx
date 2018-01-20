@@ -11,28 +11,31 @@ def test_cargo_test():
 
 
 # -----------------------------------------------------------------------------
-def test_cmd_supports_dryrun_before():
+@pytest.mark.parametrize("cmd", [
+    "fx cmd \"echo foo % bar\" one two three --dryrun",
+    "fx cmd --dryrun \"echo foo % bar\" one two three",
+    "fx cmd \"echo foo % bar\" one two three -n",
+    "fx cmd -n \"echo foo % bar\" one two three",
+    ])
+def test_cmd_dryrun_supported(cmd):
     """
-    Verify that 'fx cmd' supports -n before the command
+    Verify that 'fx cmd' supports the dryrun option in various positions
     """
-    cmd = "fx cmd --dryrun \"echo foo % bar\" one two three"
-    result = pexpect.run(cmd).decode()
+    result = runcmd(cmd)
     exp = "".join(["would do 'echo foo {} bar'\r\n".format(x)
                    for x in ["one", "two", "three"]])
-    assert exp == result
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------
-def test_cmd_supports_dryrun_after():
 def test_cmd_dryrun_verbose_optional():
     """
-    Verify that 'fx cmd' supports -n after the command
+    Verify that 'fx cmd' makes dryrun optional
     """
-    cmd = "fx cmd \"echo foo % bar\" one two three --dryrun"
-    result = pexpect.run(cmd).decode()
-    exp = "".join(["would do 'echo foo {} bar'\r\n".format(x)
+    result = runcmd("fx cmd \"echo foo % bar\" one two three")
+    exp = "".join(["foo {} bar\r\n".format(x)
                    for x in ["one", "two", "three"]])
-    assert exp == result
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------

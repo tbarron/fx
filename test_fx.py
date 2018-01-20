@@ -126,10 +126,10 @@ def test_range_command_required():
     """
     cmd = "fx range"
     result = runcmd(cmd)
-    exp = ["error: The following required arguments were not provided",
+    exp = ["error:",
+           "The following required arguments were not provided",
            "<command>",
            "--interval <interval>",
-           "<items>",
            "fx range [FLAGS] [OPTIONS] <command> --interval <interval>"
            ]
     for item in exp:
@@ -143,7 +143,8 @@ def test_range_interval_required():
     """
     cmd = "fx range \"echo foo %\""
     result = runcmd(cmd)
-    exp = ["error: The following required arguments were not provided",
+    exp = ["error:",
+           "The following required arguments were not provided",
            "--interval <interval>",
            "fx range [FLAGS] [OPTIONS] <command> --interval <interval>"
            ]

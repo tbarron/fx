@@ -6,7 +6,7 @@ def test_cargo_test():
     """
     Run 'cargo test' and verify its output reflects all tests passing
     """
-    result = pexpect.run("cargo test").decode()
+    result = runcmd("cargo test")
     assert "panic" not in result
 
 
@@ -92,11 +92,14 @@ def test_zpad_optional():
     Run 'fx range' without the -z / --zpad option to verify it's not required
     """
     cmd = "fx range \"echo foo % bar\" -i 10..15"
-    result = pexpect.run(cmd).decode()
+    result = runcmd(cmd)
     exp = "".join(["foo {} bar\r\n".format(x) for x in range(10, 15)])
     assert result == exp
 
 
 # -----------------------------------------------------------------------------
+def runcmd(cmd):
     """
+    Run a command and stringify and return stdout as the result
     """
+    return pexpect.run(cmd).decode()

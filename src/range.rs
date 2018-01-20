@@ -2,7 +2,8 @@ use std::process::Command;
 use super::*;
 
 // ----------------------------------------------------------------------------
-pub fn range(dryrun: bool, rcmd: &str, lohigh: &str, zpad: usize) {
+pub fn range(dryrun: bool, verbose: bool, rcmd: &str, lohigh: &str,
+             zpad: usize) {
     // split up the low:high range string
     let tup: (i32, i32) = get_low_high(&lohigh);
     let cmds = _rnglist(rcmd, zpad, tup.0, tup.1);

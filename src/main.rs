@@ -69,9 +69,10 @@ fn main() {
         .subcommand(SubCommand::with_name("range")
                     .about("replace % in command with nums from range")
                     .arg(Arg::with_name("dryrun")
+                         .help("report what would happen without acting")
                          .short("n")
                          .long("dryrun")
-                         .help("report what would happen without acting")
+                        )
                     .arg(Arg::with_name("verbose")
                          .help("show command before running it")
                          .short("v")
@@ -155,14 +156,13 @@ fn main() {
         }
     } else if matches.is_present("range") {
         if let Some(matches) = matches.subcommand_matches("range") {
-            let dryrun = matches.is_present("dryrun");
             let rcmd = matches.value_of("rcmd").unwrap();
             let lohigh = matches.value_of("lohigh").unwrap();
             let zpad: usize = match matches.value_of("zeropad") {
                 Some(x) => x.parse().unwrap(),
                 None => 0,
             };
-            range::range(dryrun, rcmd, lohigh, zpad);
+            let dryrun = matches.is_present("dryrun");
             let verbose = matches.is_present("verbose");
             range::range(dryrun, verbose, rcmd, lohigh, zpad);
         }

@@ -1,4 +1,5 @@
 import pexpect
+import pytest
 
 # -----------------------------------------------------------------------------
 def test_cargo_test():
@@ -23,6 +24,7 @@ def test_cmd_supports_dryrun_before():
 
 # -----------------------------------------------------------------------------
 def test_cmd_supports_dryrun_after():
+def test_cmd_dryrun_verbose_optional():
     """
     Verify that 'fx cmd' supports -n after the command
     """
@@ -35,14 +37,27 @@ def test_cmd_supports_dryrun_after():
 
 # -----------------------------------------------------------------------------
 def test_cmd_supports_n_before():
+@pytest.mark.parametrize("cmd", [
+    "fx cmd \"echo foo % bar\" one two three -v",
+    "fx cmd \"echo foo % bar\" one two three --verbose",
+    "fx cmd -v \"echo foo % bar\" one two three",
+    "fx cmd --verbose \"echo foo % bar\" one two three",
+    ])
+def test_cmd_verbose_supported(cmd):
     """
     Verify that 'fx cmd' supports -n before the command
+    Verify that 'fx cmd' supports the verbose option in various positions
     """
     cmd = "fx cmd -n \"echo foo % bar\" one two three"
     result = pexpect.run(cmd).decode()
     exp = "".join(["would do 'echo foo {} bar'\r\n".format(x)
                    for x in ["one", "two", "three"]])
     assert exp == result
+    result = runcmd(cmd)
+    arglist = ["one", "two", "three"]
+    body = "> echo foo {0} bar\r\nfoo {0} bar\r\n"
+    exp = "".join([body.format(x) for x in arglist])
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------
@@ -56,6 +71,20 @@ def test_cmd_supports_n_after():
                    for x in ["one", "two", "three"]])
     assert exp == result
 
+@pytest.mark.parametrize("cmd, xbody", [
+    ("fx range \"echo foo % bar\" -i 10..15 -v",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range -v \"echo foo % bar\" -i 10..15",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range \"echo foo % bar\" -i 10..15 --verbose",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range --verbose \"echo foo % bar\" -i 10..15",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ])
+def test_range_verbose_supported(cmd, xbody):
+    result = runcmd(cmd)
+    exp = "".join([xbody.format(x) for x in range(10, 15)])
+    assert result == exp
 
 # -----------------------------------------------------------------------------
 def test_zpad_not_required():

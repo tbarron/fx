@@ -32,6 +32,11 @@ fn main() {
                              .long("dryrun")
                              .help("report what would happen without acting")
                             )
+                    .arg(Arg::with_name("verbose")
+                         .help("show command before running it")
+                         .short("v")
+                         .long("verbose")
+                        )
                     .arg(Arg::with_name("command")
                          .help("string with '%'")
                          .required(true)
@@ -130,6 +135,8 @@ fn main() {
             let items: Vec<_> = matches.values_of("items")
                 .unwrap().collect();
             cmd::cmd(dryrun, command, &items);
+            let verbose = matches.is_present("verbose");
+            cmd::cmd(dryrun, verbose, command, &items);
         }
     } else if matches.is_present("mag") {
         if let Some(matches) = matches.subcommand_matches("mag") {

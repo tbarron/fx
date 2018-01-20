@@ -2,11 +2,14 @@
 use super::*;
 
 // ----------------------------------------------------------------------------
-pub fn cmd(dryrun: bool, command: &str, items: &[&str]) {
+pub fn cmd(dryrun: bool, verbose: bool, command: &str, items: &[&str]) {
     for filled in _cmdlist(command, items) {
         if dryrun {
             would_do(&filled);
         } else {
+            if verbose {
+                println!("> {}", &filled);
+            }
             run(&filled);
         }
     }

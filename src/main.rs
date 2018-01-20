@@ -1,5 +1,5 @@
 extern crate clap;
-use clap::{App, SubCommand, Arg};
+use clap::{App, AppSettings, SubCommand, Arg};
 use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
@@ -21,7 +21,8 @@ fn version() -> &'static str {
 fn main() {
     let mut app = App::new("fx").version(version())
         .author("Tom Barron <tusculum@gmail.com>")
-        .about("Command line effects (fx, get it?)")
+        .about("Command line effects ( fx, get it? ;)")
+        .setting(AppSettings::VersionlessSubcommands)
         .subcommand(SubCommand::with_name("ascii")
                     .about("show the ascii code table")
                        )

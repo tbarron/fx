@@ -11,6 +11,16 @@ def test_cargo_test():
 
 
 # -----------------------------------------------------------------------------
+def test_versionless_subcommands():
+    """
+    Verify that subcommands do not offer -V/--version option
+    """
+    cmd = "fx help cmd"
+    result = runcmd(cmd)
+    assert "-V, --version" not in result
+
+
+# -----------------------------------------------------------------------------
 def test_cmd_command_required():
     """
     Verify that 'fx cmd' requires a command string

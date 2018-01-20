@@ -68,6 +68,9 @@ def test_cmd_verbose_supported(cmd):
      "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
     ])
 def test_range_verbose_supported(cmd, xbody):
+    """
+    Verify that -v/--verbose is supported on 'fx range' in various positions
+    """
     result = runcmd(cmd)
     exp = "".join([xbody.format(x) for x in range(10, 15)])
     assert result == exp

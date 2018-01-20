@@ -11,6 +11,8 @@ mod cmd;
 mod mag;
 mod odx;
 mod range;
+mod rename;
+mod xargs;
 
 // ----------------------------------------------------------------------------
 fn version() -> &'static str {
@@ -175,26 +177,15 @@ fn main() {
         }
     } else if matches.is_present("rename") {
         println!("Work needed for rename");
-        rename();
+        rename::rename();
     } else if matches.is_present("xargs") {
         println!("Work needed for xargs");
-        xargs();
+        xargs::xargs();
     } else {
         println!("A subcommand is required.\n");
         app.print_help().expect("print failure");
         println!("");
     }
-}
-
-// ----------------------------------------------------------------------------
-// Apply a substitute expression to a set of file names and possibly
-// rename the files
-fn rename() {
-}
-
-// ----------------------------------------------------------------------------
-// desc
-fn xargs() {
 }
 
 // ----------------------------------------------------------------------------

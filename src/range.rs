@@ -1,4 +1,3 @@
-use std::process::Command;
 use super::*;
 
 // ----------------------------------------------------------------------------
@@ -46,22 +45,6 @@ fn get_low_high(lowhigh: &str) -> (i32, i32) {
     let high: i32 = rvec[1].parse::<i32>().unwrap();
 
     (low, high)
-}
-
-// ----------------------------------------------------------------------------
-fn run(cmd: &String) {
-    let mut cvec: Vec<String> = Vec::new();
-    for item in cmd.split(" ") {
-        cvec.push(String::from(item));
-    }
-    if let Ok(mut child) = Command::new(&cvec[0])
-        .args(&cvec[1..])
-        .spawn() {
-        child.wait()
-            .expect(format!("failure running '{}'", cmd).as_str());
-    } else {
-        println!("'{}' never started", cmd);
-    }
 }
 
 // ----------------------------------------------------------------------------

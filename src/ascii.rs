@@ -77,7 +77,8 @@ mod tests {
     // ascii_text(). But I haven't figured out how to get rust to let
     // me do that yet. :(
     //
-    // Update: The trick was to write the function to return a Vec of String.
+    // Update: The trick was to write the function to return a Vec of
+    // String rather than an array of str.
     #[test]
     fn test_ascii_low() {
         let text = ascii_text();

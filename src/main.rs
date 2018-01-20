@@ -68,23 +68,23 @@ fn main() {
                     .about("report errno values and meanings (needs work)")
                    )
         .subcommand(SubCommand::with_name("range")
-                    .about("replace % in command with nums from range")
+                    .about("replace % in command with numbers from <interval>")
                     .arg(Arg::with_name("dryrun")
-                         .help("report what would happen without acting")
+                         .help("Report what would happen without acting")
                          .short("n")
                          .long("dryrun")
                         )
                     .arg(Arg::with_name("verbose")
-                         .help("show command before running it")
+                         .help("Show command before running it")
                          .short("v")
                          .long("verbose")
                         )
-                    .arg(Arg::with_name("rcmd")
+                    .arg(Arg::with_name("command")
                          .help("string with '%'")
                          .required(true)
                         )
                     .arg(Arg::with_name("lohigh")
-                         .help("low:high range from low to high-1")
+                         .help("<low>..<high> range from <low> to <high>-1")
                          .value_name("interval")
                          .short("i")
                          .long("interval")
@@ -92,7 +92,7 @@ fn main() {
                          .takes_value(true)
                         )
                     .arg(Arg::with_name("zeropad")
-                         .help("zero fill to N columns")
+                         .help("Zero fill to <zeropad> columns")
                          .value_name("zeropad")
                          .short("z")
                          .long("zpad")
@@ -157,7 +157,7 @@ fn main() {
         }
     } else if matches.is_present("range") {
         if let Some(matches) = matches.subcommand_matches("range") {
-            let rcmd = matches.value_of("rcmd").unwrap();
+            let command = matches.value_of("command").unwrap();
             let lohigh = matches.value_of("lohigh").unwrap();
             let zpad: usize = match matches.value_of("zeropad") {
                 Some(x) => x.parse().unwrap(),
@@ -165,7 +165,7 @@ fn main() {
             };
             let dryrun = matches.is_present("dryrun");
             let verbose = matches.is_present("verbose");
-            range::range(dryrun, verbose, rcmd, lohigh, zpad);
+            range::range(dryrun, verbose, command, lohigh, zpad);
         }
     } else if matches.is_present("rename") {
         println!("Work needed for rename");

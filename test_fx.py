@@ -101,6 +101,35 @@ def test_cmd_verbose_supported(cmd):
 
 
 # -----------------------------------------------------------------------------
+def test_mag_binary_opt():
+    """
+    Verify that -b/--binary shows up in 'fx help mag' output
+    """
+    cmd = "fx help mag"
+    result = runcmd(cmd)
+    assert "-b, --binary    Use divisor 1024" in result
+
+
+# -----------------------------------------------------------------------------
+def test_mag_no_binary():
+    """
+    Verify that 'fx mag' works without --binary
+    """
+    result = runcmd("fx mag 987654")
+    assert "987.654 K" in result
+    assert "b" not in result
+
+
+# -----------------------------------------------------------------------------
+def test_mag_binary():
+    """
+    Verify that 'fx mag' with --binary uses a 1024 divisor
+    """
+    result = runcmd("fx mag -b 2141232341")
+    assert "1.994 Gb" in result
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd, xbody", [
     ("fx range \"echo foo % bar\" -i 10..15 -v",
      "> echo foo {0} bar\r\nfoo {0} bar\r\n"),

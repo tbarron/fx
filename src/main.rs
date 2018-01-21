@@ -10,6 +10,7 @@ mod ascii;
 mod cmd;
 mod mag;
 mod odx;
+mod perrno;
 mod range;
 mod rename;
 mod xargs;
@@ -72,8 +73,13 @@ fn main() {
                             )
                        )
         .subcommand(SubCommand::with_name("perrno")
-                    .about("report errno values and meanings (needs work)")
-                   )
+                    .about("report errno values and meanings")
+                    .arg(Arg::with_name("name_or_number")
+                         .help("errno number or name")
+                         .required(true)
+                         .min_values(1)
+                    )
+        )
         .subcommand(SubCommand::with_name("range")
                     .about("replace % in command with numbers from <interval>")
                     .arg(Arg::with_name("dryrun")
@@ -162,6 +168,12 @@ fn main() {
             let values: Vec<_> = matches.values_of("number")
                 .unwrap().collect();
             odx::odx(&values);
+        }
+    } else if matches.is_present("perrno") {
+        if let Some(matches) = matches.subcommand_matches("perrno") {
+            let values: Vec<_> = matches.values_of("name_or_number")
+                .unwrap().collect();
+            perrno::perrno(&values);
         }
     } else if matches.is_present("range") {
         if let Some(matches) = matches.subcommand_matches("range") {

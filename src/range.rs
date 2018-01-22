@@ -1,3 +1,4 @@
+use std::process;
 use super::*;
 
 // ----------------------------------------------------------------------------
@@ -41,8 +42,13 @@ fn get_low_high(lowhigh: &str) -> (i32, i32) {
             rvec.push(String::from(item))
         }
     }
-    let low: i32 = rvec[0].parse::<i32>().unwrap();
-    let high: i32 = rvec[1].parse::<i32>().unwrap();
+
+    let low: i32 = str_to_int32(rvec[0].as_str(), -1);
+    let high: i32 = str_to_int32(rvec[1].as_str(), -1);
+    if low < 0 || high < 0 {
+        println!("Attempt to parse '{}' failed", lowhigh);
+        process::exit(1);
+    };
 
     (low, high)
 }

@@ -1,3 +1,5 @@
+use super::*;
+
 // ----------------------------------------------------------------------------
 pub fn odx(values: &[&str]) {
     // let mut first = true;
@@ -52,12 +54,8 @@ fn is_binary(arg: &str) -> bool {
 
 // ----------------------------------------------------------------------------
 fn is_decimal(arg: &str) -> bool {
-    let result;
-    let _value: i32 = match arg.trim().parse() {
-        Ok(num)  => { result = true; num }
-        Err(_)   => { result = false; 0 }
-    };
-    result
+    let _value: i32 = str_to_int32(arg.trim(), -99);
+    _value != -99
 }
 
 // ----------------------------------------------------------------------------

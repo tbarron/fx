@@ -1,3 +1,5 @@
+import itertools
+import pdb
 import pexpect
 import pytest
 
@@ -249,6 +251,55 @@ def test_range_optionals():
     result = runcmd(cmd)
     exp = "".join(["foo {} bar\r\n".format(x) for x in range(10, 15)])
     assert result == exp
+
+
+# -----------------------------------------------------------------------------
+def test_deployable():
+    """
+    Check version against last git tag and check for untracked files or
+    outstanding updates.
+    """
+    result = runcmd("git status --porc")
+
+    # check for untracked files
+    msg = "There are untracked files"
+    assert "??" not in result, msg
+
+    # check for unstaged updates
+    msg = "There are unstaged updates"
+    assert "\n M " not in result and "\n A " not in result, msg
+
+    # check for staged but uncommitted changes
+    msg = "There are staged but uncommitted updates"
+    assert "\nM  " not in result and "\nA  " not in result, msg
+
+    # check the current version against the most recent tag
+    result = runcmd("git --no-pager tag")
+    tag_l = result.strip().split("\r\n")
+    if 0 < len(tag_l):
+        latest_tag = tag_l[-1]
+    else:
+        latest_tag = ""
+
+    assert latest_tag == current_version(), "Version does not match tag"
+
+    # verify that the most recent tag points at HEAD
+    cmd = "git --no-pager log -1 --format=format:\"%H\""
+    tag_hash = runcmd(cmd + " {}".format(latest_tag))
+    head_hash = runcmd(cmd)
+    assert head_hash == tag_hash, "Tag != HEAD"
+
+
+# -----------------------------------------------------------------------------
+def current_version():
+    """
+    Determine the current project version by reading main.rs
+    """
+    with open("src/main.rs", 'r') as f:
+        for line in itertools.takewhile(lambda line: "version() ->" not in line, f):
+            pass
+        vline = f.readline()
+        return vline.strip("\" \r\n")
 
 
 # -----------------------------------------------------------------------------

@@ -130,6 +130,47 @@ def test_mag_binary():
 
 
 # -----------------------------------------------------------------------------
+def test_perrno_noarg():
+    """
+    Try several perrno values to make sure 'fx perrno' returns the right thing
+    """
+    result = runcmd("fx perrno")
+    exp = ["error:",
+           "The following required arguments were not provided",
+           "<name_or_number>",
+           "fx perrno <name_or_number>",
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
+def test_perrno_nums():
+    """
+    Verify that 'fx perrno <number>' returns what is expected
+    """
+    result = runcmd("fx perrno 10 25 200")
+    exp = "".join(["ECHILD (10): No child processes\r\n",
+                   "ENOTTY (25): Inappropriate ioctl for device\r\n",
+                   "No error entry found for 200\r\n"
+                   ])
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
+def test_perrno_names():
+    """
+    Verify that 'fx perrno <name>' returns what is expected
+    """
+    result = runcmd("fx perrno EMLINK ENOLCK ENOSUCH")
+    exp = "".join(["EMLINK (31): Too many links\r\n",
+                   "ENOLCK (77): No locks available\r\n",
+                   "No error entry found for ENOSUCH\r\n"
+                   ])
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd, xbody", [
     ("fx range \"echo foo % bar\" -i 10..15 -v",
      "> echo foo {0} bar\r\nfoo {0} bar\r\n"),

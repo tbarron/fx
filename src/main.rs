@@ -16,11 +16,15 @@ mod rename;
 mod xargs;
 
 // ----------------------------------------------------------------------------
+// This is the single source of truth for the project's version value.
+//
 fn version() -> &'static str {
     "0.0.4"
 }
 
 // ----------------------------------------------------------------------------
+// This is the main entrypoint.
+//
 fn main() {
     let mut app = App::new("fx").version(version())
         .author("Tom Barron <tusculum@gmail.com>")
@@ -201,6 +205,9 @@ fn main() {
 }
 
 // ----------------------------------------------------------------------------
+// Read the version value out of file Cargo.toml so we can verify that
+// it's correct.
+//
 fn _get_cargo_version() -> String {
     let path = Path::new("Cargo.toml");
     let display = path.display();
@@ -231,11 +238,20 @@ fn _get_cargo_version() -> String {
 }
 
 // ----------------------------------------------------------------------------
-fn would_do(cmd: &String) {
-    println!("would do '{}'", cmd);
+// Given a String, attempt to parse it into a 32 bit int. If the parse
+// operation fails, return the default value.
+//
+fn str_to_int32(value: &str, default: i32) -> i32 {
+    let rval: i32 = match value.parse() {
+        Ok(num) => num,
+        Err(_)  => default
+    };
+    rval
 }
 
 // ----------------------------------------------------------------------------
+// Given a String, treat it as a command try to run it.
+//
 fn run(cmd: &String) {
     let mut cvec: Vec<String> = Vec::new();
     for item in cmd.split(" ") {
@@ -252,11 +268,24 @@ fn run(cmd: &String) {
 }
 
 // ----------------------------------------------------------------------------
+// Given a String, report it as something we would do if we didn't
+// have --dryrun on the command line.
+//
+fn would_do(cmd: &String) {
+    println!("would do '{}'", cmd);
+}
+
+// ----------------------------------------------------------------------------
+// Module tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Verify that the locally defined project version match the value
+    // in Cargo.toml or fail
+    //
     #[test]
     fn test_cargo_version() {
         assert_eq!(version(), _get_cargo_version());

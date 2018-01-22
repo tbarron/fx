@@ -19,7 +19,7 @@ mod xargs;
 // This is the single source of truth for the project's version value.
 //
 fn version() -> &'static str {
-    "0.0.4"
+    "0.0.5"
 }
 
 // ----------------------------------------------------------------------------

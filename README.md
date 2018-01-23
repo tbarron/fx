@@ -6,11 +6,11 @@
 
     USAGE:
         fx [SUBCOMMAND]
-    
+
     FLAGS:
         -h, --help       Prints help information
         -V, --version    Prints version information
-            
+
     SUBCOMMANDS:
         ascii     show the ascii code table
         cmd       replace % with arguments
@@ -21,4 +21,3 @@
         range     replace % in command with numbers from <interval>
         rename    rename files based on a s/foo/bar/ expr (needs work)
         xargs     replace % in command with clumps of args (needs work)
-

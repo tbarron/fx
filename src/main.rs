@@ -210,7 +210,24 @@ fn main() {
 // it's correct.
 //
 fn _get_cargo_version() -> String {
-    let path = Path::new("Cargo.toml");
+    let content = read_file("Cargo.toml");
+    let mut rval = String::new();
+    for line in content.lines() {
+        if line.contains("version") {
+            let pieces: Vec<&str> = line.split("\"").collect();
+            rval.push_str(pieces[1]);
+            break;
+        }
+    }
+    rval
+}
+
+// ----------------------------------------------------------------------------
+// Read the version value out of file Cargo.toml so we can verify that
+// it's correct.
+//
+fn read_file(filename: &str) -> String {
+    let path = Path::new(filename);
     let display = path.display();
     let mut file = match File::open(&path) {
         Err(why) => panic!("couldn't open {}: {}",
@@ -219,23 +236,14 @@ fn _get_cargo_version() -> String {
         Ok(file) => file,
     };
 
-    let mut s: String = String::new();
-    match file.read_to_string(&mut s) {
+    let mut content: String = String::new();
+    match file.read_to_string(&mut content) {
         Err(why) => panic!("couldn't read {}: {}",
                            display,
                            why.description()),
         Ok(_num) => (),
     }
-
-    let mut rval = String::new();
-    for line in s.lines() {
-        if line.contains("version") {
-            let pieces: Vec<&str> = line.split("\"").collect();
-            rval.push_str(pieces[1]);
-            break;
-        }
-    }
-    rval
+    content
 }
 
 // ----------------------------------------------------------------------------

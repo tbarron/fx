@@ -151,9 +151,10 @@ def test_perrno_nums():
     """
     Verify that 'fx perrno <number>' returns what is expected
     """
-    result = runcmd("fx perrno 10 25 200")
+    result = runcmd("fx perrno 10 25 106 200")
     exp = "".join(["ECHILD (10): No child processes\r\n",
                    "ENOTTY (25): Inappropriate ioctl for device\r\n",
+                   "EQFULL (106): Interface output queue is full\r\n"
                    "No error entry found for 200\r\n"
                    ])
     assert result == exp

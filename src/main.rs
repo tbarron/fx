@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate regex;
 use clap::{App, AppSettings, SubCommand, Arg};
 use std::error::Error;
 use std::fs::File;

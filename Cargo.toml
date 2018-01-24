@@ -5,3 +5,4 @@ authors = ["Tom Barron <tusculum@gmail.com>"]
 
 [dependencies]
 clap="*"
+regex="*"

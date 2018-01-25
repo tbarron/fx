@@ -452,11 +452,21 @@ def test_xargs_forreal(tmpdir, fx_xargs):
 
 
 # -----------------------------------------------------------------------------
-def test_xargs_verbose(tmpdir):
+def test_xargs_verbose(tmpdir, fx_xargs):
     """
     Verify that 'fx rename -v' behaves as expected
     """
-    pytest.fail('construction')
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs -v 'touch first % last'"
+        result = tbx.run(cmd, input="< tokens")
+        assert "Would run" not in result
+        assert "Running" in result
+        with open("tokens", 'r') as inp:
+            for line in inp:
+                fobj = py.path.local(line.strip())
+                assert fobj.exists()
+        assert py.path.local("first").exists()
+        assert py.path.local("last").exists()
 
 
 # -----------------------------------------------------------------------------

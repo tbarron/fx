@@ -140,15 +140,19 @@ fn main() {
                     )
         )
         .subcommand(SubCommand::with_name("xargs")
-                    .about("Replace % in command with clumps of args \
-                            (needs work)")
+                    .about("Replace % in command with clumps of args")
                     .arg(Arg::with_name("dryrun")
                          .short("n")
                          .long("dryrun")
-                         .help("report what would happen without acting")
+                         .help("Report what would happen without acting")
+                    )
+                    .arg(Arg::with_name("verbose")
+                         .short("v")
+                         .long("verbose")
+                         .help("Report each command before running it")
                     )
                     .arg(Arg::with_name("command")
-                         .help("string with '%'")
+                         .help("String containing '%'")
                          .required(true)
                     )
         );
@@ -207,8 +211,9 @@ fn main() {
     } else if matches.is_present("xargs") {
         if let Some(matches) = matches.subcommand_matches("xargs") {
             let dryrun = matches.is_present("dryrun");
+            let verbose = matches.is_present("verbose");
             let command = matches.value_of("command").unwrap();
-            xargs::xargs(dryrun, command);
+            xargs::xargs(dryrun, verbose, command);
         }
     } else {
         println!("A subcommand is required.\n");

@@ -8,6 +8,10 @@ use super::*;
 // *verbose*, report the generated commands before running each one.
 //
 pub fn xargs(dryrun: bool, verbose: bool, command: &str) {
+    let replstr = "%";
+    if !command.contains(replstr) {
+        println!("No '{}' found in '{}'", replstr, command);
+    }
     let cl: Vec<String> = _cmdlist(command);
     for cmd in cl {
         if dryrun {

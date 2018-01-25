@@ -3,7 +3,7 @@ extern crate regex;
 use clap::{App, AppSettings, SubCommand, Arg};
 use std::error::Error;
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::{self,Read};
 use std::path::Path;
 use std::process::Command;
 
@@ -244,21 +244,29 @@ fn _get_cargo_version() -> String {
 // it's correct.
 //
 fn read_file(filename: &str) -> String {
-    let path = Path::new(filename);
-    let display = path.display();
-    let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}",
-                           display,
-                           why.description()),
-        Ok(file) => file,
-    };
-
     let mut content: String = String::new();
-    match file.read_to_string(&mut content) {
-        Err(why) => panic!("couldn't read {}: {}",
-                           display,
-                           why.description()),
-        Ok(_num) => (),
+    if filename == "<stdin>" {
+        match io::stdin().read_to_string(&mut content) {
+            Err(why) => panic!("failure reading <stdin>: {}",
+                               why.description()),
+            Ok(_num) => (),
+        }
+    } else {
+        let path = Path::new(filename);
+        let display = path.display();
+        let mut file = match File::open(&path) {
+            Err(why) => panic!("couldn't open {}: {}",
+                               display,
+                               why.description()),
+            Ok(file) => file,
+        };
+
+        match file.read_to_string(&mut content) {
+            Err(why) => panic!("couldn't read {}: {}",
+                               display,
+                               why.description()),
+            Ok(_num) => (),
+        }
     }
     content
 }

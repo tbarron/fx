@@ -7,16 +7,25 @@ use super::*;
 // report the generated commands without actually running them. With
 // *verbose*, report the generated commands before running each one.
 //
-pub fn xargs(dryrun: bool, verbose: bool, command: &str) {
-    let replstr = "%";
-    if !command.contains(replstr) {
-        println!("No '{}' found in '{}'", replstr, command);
+pub fn xargs(dryrun: bool, verbose: bool, replstr: &str, command: &str) {
+    let mut lrepl = replstr;
+    if lrepl == "" {
+        lrepl = "%";
     }
-    let cl: Vec<String> = _cmdlist(command);
-    for cmd in cl {
-        if dryrun {
-            println!("Would run '{}'", cmd);
+    if command.contains(lrepl) {
+        let cl: Vec<String> = _cmdlist(command, lrepl);
+        for cmd in cl {
+            if dryrun {
+                println!("Would run '{}'", cmd);
+            } else {
+                if verbose {
+                    println!("Running '{}'", cmd);
+                }
+                run(&cmd);
+            }
         }
+    } else {
+        println!("No '{}' found in '{}'", lrepl, command);
     }
 }
 
@@ -25,7 +34,7 @@ pub fn xargs(dryrun: bool, verbose: bool, command: &str) {
 // putting strings of tokens into *command* in place of the replstr
 // ('%' by default)
 //
-fn _cmdlist(command: &str) -> Vec<String> {
+fn _cmdlist(command: &str, replstr: &str) -> Vec<String> {
     let stdin = read_file("<stdin>");
     let mut rval: Vec<String> = Vec::new();
     let mut collect = String::new();
@@ -34,14 +43,14 @@ fn _cmdlist(command: &str) -> Vec<String> {
             if 0 < collect.len() { collect.push_str(" "); }
             collect.push_str(item);
         } else {
-            let cmd: String = command.replace('%', collect.as_str());
+            let cmd: String = command.replace(replstr, collect.as_str());
             rval.push(cmd);
             collect = String::from(item);
         }
     }
 
     if 0 < collect.len() {
-        let cmd: String = command.replace('%', collect.as_str());
+        let cmd: String = command.replace(replstr, collect.as_str());
         rval.push(cmd);
     }
 

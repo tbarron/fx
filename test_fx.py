@@ -378,6 +378,16 @@ def test_xargs_dryrun(tmpdir, fx_xargs):
             assert line.strip().endswith(" bar'")
 
 
+# -----------------------------------------------------------------------------
+def test_xargs_norepl(tmpdir, fx_xargs):
+    """
+    If replstr does not appear in *command*, 'fx xargs' should complain
+    """
+    cmd = "fx xargs 'echo command no repl'"
+    result = tbx.run(cmd)
+    assert "No '%' found in 'echo command no repl'" in result
+
+
 
 
 # -----------------------------------------------------------------------------

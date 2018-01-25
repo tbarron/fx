@@ -6,6 +6,7 @@ import pdb
 import pexpect
 import py
 import pytest
+import re
 import tbx
 
 
@@ -481,13 +482,9 @@ def test_deployable():
     msg = "There are untracked files"
     assert "??" not in result, msg
 
-    # check for unstaged updates
-    msg = "There are unstaged updates"
-    assert "\n M " not in result and "\n A " not in result, msg
-
-    # check for staged but uncommitted changes
-    msg = "There are staged but uncommitted updates"
-    assert "\nM  " not in result and "\nA  " not in result, msg
+    # check for unstaged updates or staged but uncommitted updates
+    msg = "There are uncommitted updates, staged or unstaged"
+    assert not re.findall("\n?(MM|MA|AM|AA|A |M | A| M)", result), msg
 
     # check the current version against the most recent tag
     result = runcmd("git --no-pager tag")

@@ -118,19 +118,23 @@ fn main() {
                     )
         )
         .subcommand(SubCommand::with_name("rename")
-                    .about("rename files based on a s/foo/bar/ expr \
-                            (needs work)")
+                    .about("Rename files based on a s/foo/bar/ expr")
                     .arg(Arg::with_name("dryrun")
                          .short("n")
                          .long("dryrun")
-                         .help("report what would happen without acting")
+                         .help("Report what would happen without acting")
+                    )
+                    .arg(Arg::with_name("verbose")
+                         .short("v")
+                         .long("verbose")
+                         .help("Report renames as they happen")
                     )
                     .arg(Arg::with_name("substitute")
-                         .help("s/old/new/")
+                         .help("Edit expression: s/old/new/")
                          .required(true)
                     )
                     .arg(Arg::with_name("items")
-                         .help("% replacements")
+                         .help("Files to rename")
                          .required(true)
                          .min_values(1)
                     )
@@ -193,8 +197,13 @@ fn main() {
             range::range(dryrun, verbose, command, lohigh, zpad);
         }
     } else if matches.is_present("rename") {
-        println!("Work needed for rename");
-        rename::rename();
+        if let Some(matches) = matches.subcommand_matches("rename") {
+            let dryrun = matches.is_present("dryrun");
+            let verbose = matches.is_present("verbose");
+            let subst = matches.value_of("substitute").unwrap();
+            let items: Vec<_> = matches.values_of("items").unwrap().collect();
+            rename::rename(dryrun, verbose, subst, items);
+        }
     } else if matches.is_present("xargs") {
         println!("Work needed for xargs");
         xargs::xargs();

@@ -205,8 +205,11 @@ fn main() {
             rename::rename(dryrun, verbose, subst, items);
         }
     } else if matches.is_present("xargs") {
-        println!("Work needed for xargs");
-        xargs::xargs();
+        if let Some(matches) = matches.subcommand_matches("xargs") {
+            let dryrun = matches.is_present("dryrun");
+            let command = matches.value_of("command").unwrap();
+            xargs::xargs(dryrun, command);
+        }
     } else {
         println!("A subcommand is required.\n");
         app.print_help().expect("print failure");

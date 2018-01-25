@@ -434,11 +434,21 @@ def test_xargs_altrepl(tmpdir, fx_xargs):
 
 
 # -----------------------------------------------------------------------------
-def test_xargs_forreal(tmpdir):
+def test_xargs_forreal(tmpdir, fx_xargs):
     """
     Verify that 'fx xargs' (no -n, --dryrun) behaves as expected
     """
-    pytest.fail('construction')
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs 'touch first % last'"
+        result = tbx.run(cmd, input="< tokens")
+        assert "Would run" not in result
+        assert "Running" not in result
+        with open("tokens", 'r') as inp:
+            for line in inp:
+                fobj = py.path.local(line.strip())
+                assert fobj.exists()
+        assert py.path.local("first").exists()
+        assert py.path.local("last").exists()
 
 
 # -----------------------------------------------------------------------------

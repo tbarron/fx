@@ -567,3 +567,16 @@ def runcmd(cmd):
     Run a command and stringify and return stdout as the result
     """
     return pexpect.run(cmd).decode()
+
+
+# -----------------------------------------------------------------------------
+def younger_than(first, second):
+    """
+    Return True if *first* has a more recent mtime than *second*
+    """
+    first_p = py.path.local(first)
+    second_p = py.path.local(second)
+    return second_p.mtime() < first_p.mtime()
+
+
+# -----------------------------------------------------------------------------

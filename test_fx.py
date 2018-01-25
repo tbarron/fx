@@ -10,6 +10,21 @@ import tbx
 
 
 # -----------------------------------------------------------------------------
+def test_cargo_build():
+    """
+    Check whether the target is out of date and if so run 'cargo build'
+    """
+    build = False
+    target = "target/debug/fx"
+    srcl = ["ascii", "cmd", "mag", "main", "odx", "perrno", "range", "rename", "xargs"]
+    if any([not os.path.exists(target)] +
+           [younger_than("src/{}.rs".format(x), target) for x in srcl]):
+        result = runcmd("cargo build");
+        assert "panic" not in result
+        assert "error" not in result
+
+
+# -----------------------------------------------------------------------------
 def test_cargo_test():
     """
     Run 'cargo test' and verify its output reflects all tests passing

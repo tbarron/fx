@@ -52,7 +52,7 @@ def test_help_contents():
            "perrno    Report errno values and meanings",
            "range     Replace % in command with numbers from <interval>",
            "rename    Rename files based on a s/foo/bar/ expr",
-           "xargs     Replace % in command with clumps of args",
+           "xargs     Replace <replstr> in command with clumps of args",
            ]
     for item in exp:
         assert item in result
@@ -368,11 +368,11 @@ def test_xargs_help():
     cmd = "fx help xargs"
     result = runcmd(cmd)
     assert "(needs work)" not in result
-    exp = ["Replace % in command with clumps of args",
+    exp = ["Replace <replstr> in command with clumps of args",
            "-n, --dryrun     Report what would happen without acting",
            "-h, --help       Prints help information",
            "-v, --verbose    Report each command before running it",
-           "<command>    String containing '%'",]
+           "<command>    Command containing <replstr>",]
     for item in exp:
         assert item in result
 

@@ -6,6 +6,7 @@ import pdb
 import pexpect
 import py
 import pytest
+import tbx
 
 
 # -----------------------------------------------------------------------------
@@ -345,6 +346,56 @@ def test_rename_verbose(tmpdir, fx_rename):
 
 
 # -----------------------------------------------------------------------------
+def test_xargs_help():
+    """
+    Verify that the right stuff is in the output of 'fx help xargs'
+    """
+    cmd = "fx help xargs"
+    result = runcmd(cmd)
+    assert "(needs work)" not in result
+    exp = ["Replace % in command with clumps of args",
+           "-n, --dryrun     Report what would happen without acting",
+           "-h, --help       Prints help information",
+           "-v, --verbose    Report each command before running it",
+           "<command>     String containing '%'",
+           "<items>...    Files to bundle into command"]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
+def test_xargs_dryrun(tmpdir, fx_xargs):
+    """
+    Verify that 'fx xargs -n' behaves as expected
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs -n \"echo foo % bar\""
+        result = tbx.run(cmd, input="< tokens")
+        with open("tokens", 'r') as inp:
+            for line in inp:
+                assert line.strip() in result
+        for line in result.split("\r\n"):
+            assert line.startswith("Would run 'echo foo ")
+            assert line.endswith(" bar")
+
+
+# -----------------------------------------------------------------------------
+def test_xargs_forreal(tmpdir):
+    """
+    Verify that 'fx xargs' (no -n, --dryrun) behaves as expected
+    """
+    pytest.fail('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_xargs_verbose(tmpdir):
+    """
+    Verify that 'fx rename -v' behaves as expected
+    """
+    pytest.fail('construction')
+
+
+# -----------------------------------------------------------------------------
 def test_deployable():
     """
     Check version against last git tag and check for untracked files or
@@ -422,6 +473,19 @@ def fx_rename(tmpdir):
     for fname in flist:
         tmpdir.join(fname).ensure()
     return flist
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def fx_xargs(tmpdir):
+    """
+    Write a file of arguments for 'fx xargs' to play with
+    """
+    with chdir(tmpdir.strpath):
+        with open("tokens", 'w') as out:
+            for idx in range(300):
+                out.write("token_{:03d}\n".format(idx))
+
 
 # -----------------------------------------------------------------------------
 def runcmd(cmd):

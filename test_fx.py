@@ -404,8 +404,33 @@ def test_xargs_norepl(tmpdir, fx_xargs):
         assert "No '%' found in 'echo command no repl'" in result
 
 
+# -----------------------------------------------------------------------------
+def test_xargs_altnorepl(tmpdir, fx_xargs):
+    """
+    'fx xargs --replstr foo' should use 'foo' rather than '%' as the replstr
+    but should complain about the fact that 'foo' does not appear in the
+    command
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs -n -r foo 'echo The juice is >>>here<<<'"
+        result = tbx.run(cmd, input="< tokens")
+        assert "No 'foo' found in 'echo The juice is >>>here<<<'" in result
 
 
+# -----------------------------------------------------------------------------
+def test_xargs_altrepl(tmpdir, fx_xargs):
+    """
+    'fx xargs --replstr foo' should use 'foo' rather than '%' as the replstr
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs -n -r here 'echo The juice is >>>here<<<'"
+        result = tbx.run(cmd, input="< tokens")
+        with open("tokens", 'r') as inp:
+            for line in inp:
+                assert line.strip() in result
+        for line in result.split("\r\n"):
+            assert line.startswith("Would run 'echo The ")
+            assert line.strip().endswith("<<<'")
 
 
 # -----------------------------------------------------------------------------

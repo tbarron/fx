@@ -1,7 +1,12 @@
+import contextlib
+import glob
 import itertools
+import os
 import pdb
 import pexpect
+import py
 import pytest
+
 
 # -----------------------------------------------------------------------------
 def test_cargo_test():
@@ -11,6 +16,30 @@ def test_cargo_test():
     result = runcmd("cargo test")
     assert "panic" not in result
     assert "error" not in result
+
+
+# -----------------------------------------------------------------------------
+def test_help_contents():
+    """
+    Verify the contents of 'fx help'
+    """
+    result = runcmd("fx help")
+    exp = ["fx [SUBCOMMAND]",
+           "-h, --help       Prints help information",
+           "-V, --version    Prints version information",
+           "ascii     Show the ascii code table",
+           "cmd       Replace % with arguments",
+           "help      Prints this message or the help of the given "
+           "subcommand(s)",
+           "mag       Report the size of a number",
+           "odx       Report hex, decimal, octal, and binary values",
+           "perrno    Report errno values and meanings",
+           "range     Replace % in command with numbers from <interval>",
+           "rename    Rename files based on a s/foo/bar/ expr",
+           "xargs     Replace % in command with clumps of args",
+           ]
+    for item in exp:
+        assert item in result
 
 
 # -----------------------------------------------------------------------------
@@ -255,6 +284,67 @@ def test_range_optionals():
 
 
 # -----------------------------------------------------------------------------
+def test_rename_help():
+    """
+    Verify that the right stuff is in the output of 'fx help rename'
+    """
+    cmd = "fx help rename"
+    result = runcmd(cmd)
+    assert "Rename files based on a s/foo/bar/ expr" in result
+    assert "(needs work)" not in result
+    assert "-n, --dryrun     Report what would happen without acting" in result
+    assert "-h, --help       Prints help information" in result
+    assert "-v, --verbose    Report renames as they happen" in result
+    assert "<substitute>    Edit expression: s/old/new/" in result
+    assert "<items>...      Files to rename" in result
+
+
+# -----------------------------------------------------------------------------
+def test_rename_dryrun(tmpdir, fx_rename):
+    """
+    Verify that 'fx rename -n' behaves as expected
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx rename -n s/RENAME/NEW/ {}".format(" ".join(fx_rename))
+        result = runcmd(cmd)
+        for fname in fx_rename:
+            assert os.path.exists(fname)
+            new = fname.replace('RENAME', 'NEW')
+            exp = "Would rename {} to {}".format(fname, new)
+            assert exp in result
+
+
+# -----------------------------------------------------------------------------
+def test_rename_forreal(tmpdir, fx_rename):
+    """
+    Verify that 'fx rename' (no -n, --dryrun) behaves as expected
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx rename s/RENAME/NEW/ {}".format(" ".join(fx_rename))
+        result = runcmd(cmd)
+        assert result == ""
+        for fname in fx_rename:
+            assert not os.path.exists(fname)
+            new = fname.replace('RENAME', 'NEW')
+            assert os.path.exists(new)
+
+
+# -----------------------------------------------------------------------------
+def test_rename_verbose(tmpdir, fx_rename):
+    """
+    Verify that 'fx rename -v' behaves as expected
+    """
+    with chdir(tmpdir.strpath):
+        cmd = "fx rename -v s/RENAME/NEW/ {}".format(" ".join(fx_rename))
+        result = runcmd(cmd)
+        for fname in fx_rename:
+            new = fname.replace('RENAME', 'NEW')
+            assert "Renaming {} to {}".format(fname, new) in result
+            assert not os.path.exists(fname)
+            assert os.path.exists(new)
+
+
+# -----------------------------------------------------------------------------
 def test_deployable():
     """
     Check version against last git tag and check for untracked files or
@@ -292,6 +382,23 @@ def test_deployable():
 
 
 # -----------------------------------------------------------------------------
+@contextlib.contextmanager
+def chdir(directory):
+    """
+    Context-based directory excursion
+
+    When the with statement ends, you're back where you started.
+    """
+    origin = os.getcwd()
+    try:
+        os.chdir(directory)
+        yield
+
+    finally:
+        os.chdir(origin)
+
+
+# -----------------------------------------------------------------------------
 def current_version():
     """
     Determine the current project version by reading main.rs
@@ -302,6 +409,19 @@ def current_version():
         vline = f.readline()
         return vline.strip("\" \r\n")
 
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def fx_rename(tmpdir):
+    """
+    Set up files to be renamed by 'fx rename ...'
+    """
+    flist = ["RUNT_one_RENAME",
+             "RUNT_two_RENAME_two",
+             "RENAME_me_RUNT"]
+    for fname in flist:
+        tmpdir.join(fname).ensure()
+    return flist
 
 # -----------------------------------------------------------------------------
 def runcmd(cmd):

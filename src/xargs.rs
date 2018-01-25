@@ -1,3 +1,5 @@
+use super::*;
+
 // ----------------------------------------------------------------------------
 // This function reads tokens from stdin and inserts them into
 // *command* where the '%' is, limiting the total length of command
@@ -9,4 +11,7 @@ pub fn xargs(dryrun: bool, verbose: bool, command: &str) {
     println!("dryrun = {:?}", dryrun);
     println!("verbose = {:?}", verbose);
     println!("command = '{}'", command);
+
+    let stdin = read_file("<stdin>");
+    println!("{}", stdin);
 }

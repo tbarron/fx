@@ -357,8 +357,7 @@ def test_xargs_help():
            "-n, --dryrun     Report what would happen without acting",
            "-h, --help       Prints help information",
            "-v, --verbose    Report each command before running it",
-           "<command>     String containing '%'",
-           "<items>...    Files to bundle into command"]
+           "<command>    String containing '%'",]
     for item in exp:
         assert item in result
 
@@ -376,7 +375,9 @@ def test_xargs_dryrun(tmpdir, fx_xargs):
                 assert line.strip() in result
         for line in result.split("\r\n"):
             assert line.startswith("Would run 'echo foo ")
-            assert line.endswith(" bar")
+            assert line.strip().endswith(" bar'")
+
+
 
 
 # -----------------------------------------------------------------------------

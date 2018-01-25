@@ -398,9 +398,12 @@ def test_xargs_norepl(tmpdir, fx_xargs):
     """
     If replstr does not appear in *command*, 'fx xargs' should complain
     """
-    cmd = "fx xargs 'echo command no repl'"
-    result = tbx.run(cmd)
-    assert "No '%' found in 'echo command no repl'" in result
+    with chdir(tmpdir.strpath):
+        cmd = "fx xargs 'echo command no repl'"
+        result = tbx.run(cmd, input="< tokens")
+        assert "No '%' found in 'echo command no repl'" in result
+
+
 
 
 

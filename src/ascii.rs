@@ -1,11 +1,13 @@
 // ----------------------------------------------------------------------------
 // Display the ascii code table
+//
 pub fn ascii() {
     println!("{}", ascii_text());
 }
 
 // ----------------------------------------------------------------------------
 // Construct the ascii code table for display in a string
+//
 fn ascii_text() -> String {
     let mut line = String::from("");
     let mut rval = String::from("");
@@ -36,6 +38,8 @@ fn ascii_text() -> String {
 }
 
 // ----------------------------------------------------------------------------
+// Return the list of names for non-printable ascii characters
+//
 fn ascii_names() -> Vec<String> {
     let mut rval = Vec::new();
     for item in ["NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL",
@@ -49,11 +53,15 @@ fn ascii_names() -> Vec<String> {
 }
 
 // ----------------------------------------------------------------------------
+// Tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Verify that SOH is in the output of ascii_text()
+    //
     #[test]
     fn test_ascii() {
         assert!(ascii_text().contains(" SOH "));
@@ -61,6 +69,7 @@ mod tests {
 
     // ------------------------------------------------------------------------
     // Verify that all the hex values show up in the output
+    //
     #[test]
     fn test_ascii_count() {
         let text = ascii_text();
@@ -79,6 +88,7 @@ mod tests {
     //
     // Update: The trick was to write the function to return a Vec of
     // String rather than an array of str.
+    //
     #[test]
     fn test_ascii_low() {
         let text = ascii_text();
@@ -89,6 +99,9 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Verify that all the hex values from 0x21 to 0x7f show up in the
+    // output of ascii_text()
+    //
     #[test]
     fn test_ascii_names() {
         let text = ascii_text();

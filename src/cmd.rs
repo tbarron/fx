@@ -1,7 +1,9 @@
-//use std::process::Command;
 use super::*;
 
 // ----------------------------------------------------------------------------
+// Handle a command with options dryrun, verbose, and items that will
+// be subbed into the command where '%' appears.
+//
 pub fn cmd(dryrun: bool, verbose: bool, command: &str, items: &[&str]) {
     for filled in _cmdlist(command, items) {
         if dryrun {
@@ -16,6 +18,9 @@ pub fn cmd(dryrun: bool, verbose: bool, command: &str, items: &[&str]) {
 }
 
 // ----------------------------------------------------------------------------
+// Generate a list of commands, one for each item with the item subbed
+// into the command
+//
 fn _cmdlist(command: &str, items: &[&str]) -> Vec<String> {
     let mut rvec: Vec<String> = Vec::new();
     for item in items {
@@ -26,11 +31,16 @@ fn _cmdlist(command: &str, items: &[&str]) -> Vec<String> {
 }
 
 // ----------------------------------------------------------------------------
+// tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Verify that _cmdlist() generates the expected list of commands
+    // given a basic command and a list of items
+    //
     #[test]
     fn test_cmd_make_list() {
         assert_eq!(_cmdlist("echo %", &["foo", "bar", "xyzzy"]),

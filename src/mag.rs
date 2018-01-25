@@ -1,6 +1,14 @@
 use std::num::ParseFloatError;
 
 // ----------------------------------------------------------------------------
+// Computes and prints the desired output.
+//
+// mag_value() returns a Result containing either a String showing the
+// computed result or a ParseFloatError. This result comes from
+// to_float(), which mag_value() calls. print_mag() unwraps the Result
+// and prints either the computed result from the String or the
+// appropriate error message if that's what's in the Result.
+//
 pub fn mag(binary: bool, values: &[&str]) {
     for value in values {
         if binary {
@@ -12,6 +20,8 @@ pub fn mag(binary: bool, values: &[&str]) {
 }
 
 // ----------------------------------------------------------------------------
+// Returns a list of binary (divisor 1024) unit suffixes
+//
 fn binary_names() -> Vec<String> {
     let mut rval: Vec<String> = [].to_vec();
     for name in ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"].iter() {
@@ -21,6 +31,8 @@ fn binary_names() -> Vec<String> {
 }
 
 // ----------------------------------------------------------------------------
+// Returns a list of decimal (divisor 1000) unit suffixes
+//
 fn si_names() -> Vec<String> {
     let mut rval: Vec<String> = [].to_vec();
     for name in ["", "K", "M", "G", "T", "P", "E", "Z", "Y"].iter() {
@@ -30,6 +42,8 @@ fn si_names() -> Vec<String> {
 }
 
 // ----------------------------------------------------------------------------
+// Unwraps the Result and print either the computed output or the error
+//
 fn print_mag(result: Result<String, ParseFloatError>) {
     match result {
         Ok(n)  => println!("{}", n),
@@ -38,6 +52,11 @@ fn print_mag(result: Result<String, ParseFloatError>) {
 }
 
 // ----------------------------------------------------------------------------
+// Converts a str to a 64 bit float value. If the conversion is
+// successful, returns a Result containing the the value. If the
+// conversion fails, the '?' that follows the parse function returns a
+// Result containing the error.
+//
 fn to_float(val: &str) -> Result<f64, ParseFloatError> {
     let val: String = val.replace("_", "");
     let val = val.trim().parse::<f64>()?;
@@ -45,6 +64,10 @@ fn to_float(val: &str) -> Result<f64, ParseFloatError> {
 }
 
 // ----------------------------------------------------------------------------
+// Given a str value, a divisor, and a list of suffixes, compute the
+// floating point number of appropriate units to forat into a String
+// and return.
+//
 fn mag_value(val: &str, divisor: f64, namelist: Vec<String>)
              -> Result<String, ParseFloatError> {
     let mut idx = 0;
@@ -60,11 +83,15 @@ fn mag_value(val: &str, divisor: f64, namelist: Vec<String>)
 }
 
 // ----------------------------------------------------------------------------
+// Tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Tests of to_float()
+    //
     #[test]
     fn test_to_float() {
         assert_eq!(to_float("12.25"), Ok(12.25));
@@ -74,6 +101,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests of mag_value() with no underscores in the input
+    //
     #[test]
     fn test_mag_no_underscore() {
         assert_eq!(mag_value("1241", 1000.0, si_names()),
@@ -85,6 +114,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests of mag_value() with underscores in the input
+    //
     #[test]
     fn test_mag_underscore() {
         assert_eq!(mag_value("1_241", 1000.0, si_names()),
@@ -96,6 +127,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests of mag_value() with underscores and divisor 1024 in the input
+    //
     #[test]
     fn test_mag_binary() {
         assert_eq!(mag_value("1_241", 1024.0, binary_names()),

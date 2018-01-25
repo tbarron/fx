@@ -2,6 +2,8 @@ use std::process;
 use super::*;
 
 // ----------------------------------------------------------------------------
+// Generate a list of commands for a set of numbers
+//
 pub fn range(dryrun: bool, verbose: bool, rcmd: &str, lohigh: &str,
              zpad: usize) {
     // split up the low:high range string
@@ -20,6 +22,10 @@ pub fn range(dryrun: bool, verbose: bool, rcmd: &str, lohigh: &str,
 }
 
 // ----------------------------------------------------------------------------
+// For each value between *low* and *high*, generates *cmd* with the
+// number subbed in for '%'. If _zpad is not 0, enough '0' characters
+// are prepended to make the number that wide.
+//
 fn _rnglist(cmd: &str, _zpad: usize, low: i32, high: i32) -> Vec<String> {
     let mut rvec: Vec<String> = Vec::new();
     for num in low .. high {
@@ -31,6 +37,8 @@ fn _rnglist(cmd: &str, _zpad: usize, low: i32, high: i32) -> Vec<String> {
 }
 
 // ----------------------------------------------------------------------------
+// Parses the *lowhigh* value to establish the desired range.
+//
 fn get_low_high(lowhigh: &str) -> (i32, i32) {
     let mut rvec: Vec<String> = Vec::new();
     if lowhigh.contains(":") {
@@ -54,11 +62,15 @@ fn get_low_high(lowhigh: &str) -> (i32, i32) {
 }
 
 // ----------------------------------------------------------------------------
+// Tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Test range parser with a ':' as a separator
+    //
     #[test]
     fn test_rng_glh_colon() {
         let tup: (i32, i32) = get_low_high("5:9");
@@ -67,6 +79,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Test range parser with a '..' as a separator
+    //
     #[test]
     fn test_rng_glh_dotdot() {
         let tup: (i32, i32) = get_low_high("18..27");
@@ -75,6 +89,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Test the command list generator
+    //
     #[test]
     fn test_rng_make_list() {
         assert_eq!(_rnglist("echo %", 0, 7, 13),
@@ -83,6 +99,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Test the command list generator with a non-zero zpad value
+    //
     #[test]
     fn test_rng_make_list_zpad() {
         assert_eq!(_rnglist("echo %", 2, 7, 13),

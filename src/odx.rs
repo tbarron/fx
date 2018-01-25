@@ -1,6 +1,9 @@
 use super::*;
 
 // ----------------------------------------------------------------------------
+// The odx subcommand accepts a value in any of the four formats and
+// then reports it in all four formats.
+//
 pub fn odx(values: &[&str]) {
     // let mut first = true;
     for arg in values {
@@ -22,6 +25,7 @@ pub fn odx(values: &[&str]) {
 
 // ----------------------------------------------------------------------------
 // Given a string and a radix (2, 8, 10, or 16), convert the string
+//
 fn refract(arg: &str, radix: u32) -> String {
     let value: &str = arg.trim();
     let value: i64 =
@@ -35,35 +39,47 @@ fn refract(arg: &str, radix: u32) -> String {
 }
 
 // ----------------------------------------------------------------------------
+// Returns true if the input represents a hex value
+//
 fn is_hex(arg: &str) -> bool {
     let chrs: Vec<char> = arg.trim().chars().collect();
     chrs[0] == '0' && chrs[1] == 'x'
 }
 
 // ----------------------------------------------------------------------------
+// Returns true if the input represents an octal value
+//
 fn is_octal(arg: &str) -> bool {
     let chrs: Vec<char> = arg.trim().chars().collect();
     chrs[0] == '0' && chrs[1] == 'o'
 }
 
 // ----------------------------------------------------------------------------
+// Returns true if the input represents a binary value
+//
 fn is_binary(arg: &str) -> bool {
     let chrs: Vec<char> = arg.trim().chars().collect();
     chrs[0] == '0' && chrs[1] == 'b'
 }
 
 // ----------------------------------------------------------------------------
+// Returns true if the input represents a decimal value
+//
 fn is_decimal(arg: &str) -> bool {
     let _value: i32 = str_to_int32(arg.trim(), -99);
     _value != -99
 }
 
 // ----------------------------------------------------------------------------
+// Tests
+//
 #[cfg(test)]
 mod tests {
     use super::*;
 
     // ------------------------------------------------------------------------
+    // Tests the refract() function
+    //
     #[test]
     fn test_refract() {
         assert_eq!(refract("0b110110", 2),
@@ -87,6 +103,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests the is_hex() function
+    //
     #[test]
     fn test_is_hex() {
         assert!(   is_hex("0x100"));
@@ -99,6 +117,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests the is_octal() function
+    //
     #[test]
     fn test_is_octal() {
         assert!( ! is_octal("0x100"));
@@ -111,6 +131,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests the is_binary() function
+    //
     #[test]
     fn test_is_binary() {
         assert!( ! is_binary("0x100"));
@@ -123,6 +145,8 @@ mod tests {
     }
 
     // ------------------------------------------------------------------------
+    // Tests the is_decimal() function
+    //
     #[test]
     fn test_is_decimal() {
         assert!( ! is_decimal("0x100"));

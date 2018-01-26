@@ -179,6 +179,24 @@ def test_cmd_optionals():
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd", [
+    "fx cmd -r xxx \"echo foo xxx bar\" one two three -v",
+    "fx cmd -r xxx \"echo foo xxx bar\" one two three --verbose",
+    "fx cmd -r xxx -v \"echo foo xxx bar\" one two three",
+    "fx cmd -r xxx --verbose \"echo foo xxx bar\" one two three",
+    ])
+def test_cmd_altrepl_supported(cmd):
+    """
+    Verify that 'fx cmd' works with an alternate replstr
+    """
+    result = runcmd(cmd)
+    arglist = ["one", "two", "three"]
+    body = "> echo foo {0} bar\r\nfoo {0} bar\r\n"
+    exp = "".join([body.format(x) for x in arglist])
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
+@pytest.mark.parametrize("cmd", [
     "fx cmd \"echo foo % bar\" one two three -v",
     "fx cmd \"echo foo % bar\" one two three --verbose",
     "fx cmd -v \"echo foo % bar\" one two three",

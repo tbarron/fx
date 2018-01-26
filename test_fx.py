@@ -94,6 +94,29 @@ def test_cmd_help():
 
 
 # -----------------------------------------------------------------------------
+def test_cmd_command_norepl_def():
+    """
+    Verify that if command doesn't contain default <replstr> 'fx cmd' complains
+    """
+    fx_cmd = "echo this is the command with no replstr"
+    cmd = "fx cmd \"{}\" one two three".format(fx_cmd)
+    result = runcmd(cmd)
+    assert result.strip() == "No '%' found in '{}'".format(fx_cmd)
+
+
+# -----------------------------------------------------------------------------
+def test_cmd_command_norepl_alt():
+    """
+    Verify that if command doesn't contain alternate <replstr> 'fx cmd'
+    complains
+    """
+    fx_cmd = "echo this is the command with no replstr"
+    cmd = "fx cmd -r zzz \"{}\" one two three".format(fx_cmd)
+    result = runcmd(cmd)
+    assert result.strip() == "No 'zzz' found in '{}'".format(fx_cmd)
+
+
+# -----------------------------------------------------------------------------
 def test_cmd_command_required():
     """
     Verify that 'fx cmd' requires a command string

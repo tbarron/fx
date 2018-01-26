@@ -4,16 +4,25 @@ use super::*;
 // Handle a command with options dryrun, verbose, and items that will
 // be subbed into the command where '%' appears.
 //
-pub fn cmd(dryrun: bool, verbose: bool, command: &str, items: &[&str]) {
-    for filled in _cmdlist(command, items) {
-        if dryrun {
-            would_do(&filled);
-        } else {
-            if verbose {
-                println!("> {}", &filled);
+pub fn cmd(dryrun: bool, verbose: bool, replstr: &str, command: &str,
+           items: &[&str]) {
+    let mut lrepl = replstr;
+    if lrepl == "" {
+        lrepl = "%";
+    }
+    if command.contains(lrepl) {
+        for filled in _cmdlist(replstr, command, items) {
+            if dryrun {
+                would_do(&filled);
+            } else {
+                if verbose {
+                    println!("> {}", &filled);
+                }
+                run(&filled);
             }
-            run(&filled);
         }
+    } else {
+        println!("No '{}' found in '{}'", lrepl, command);
     }
 }
 

@@ -293,7 +293,7 @@ def test_perrno_names():
     ])
 def test_range_altrepl_supported(cmd):
     """
-    Verify that 'fx cmd' works with an alternate replstr
+    Verify that 'fx range' works with an alternate replstr
     """
     result = runcmd(cmd)
     arglist = [1, 2, 3, 4]
@@ -415,10 +415,6 @@ def test_range_dryrun_supported(cmd):
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd, xbody", [
-    ("fx range \"echo foo % bar\" -i 10..15 -z 3", "foo {:03d} bar\r\n"),
-    ("fx range -z 4 \"echo foo % bar\" -i 10..15", "foo {:04d} bar\r\n"),
-    ("fx range \"echo foo % bar\" -i 10..15 --zpad 5", "foo {:05d} bar\r\n"),
-    ("fx range --zpad 6 \"echo foo % bar\" -i 10..15", "foo {:06d} bar\r\n"),
     ("fx range \"echo foo % bar\" -i 10..15 -v",
      "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
     ("fx range -v \"echo foo % bar\" -i 10..15",
@@ -428,10 +424,8 @@ def test_range_dryrun_supported(cmd):
     ("fx range --verbose \"echo foo % bar\" -i 10..15",
      "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
     ])
-def test_range_zpad_supported(cmd, xbody):
 def test_range_verbose_supported(cmd, xbody):
     """
-    Verify that option -z/--zpad is supported in various positions
     Verify that -v/--verbose is supported on 'fx range' in various positions
     """
     result = runcmd(cmd)
@@ -440,14 +434,18 @@ def test_range_verbose_supported(cmd, xbody):
 
 
 # -----------------------------------------------------------------------------
-def test_range_optionals():
+@pytest.mark.parametrize("cmd, xbody", [
+    ("fx range \"echo foo % bar\" -i 10..15 -z 3", "foo {:03d} bar\r\n"),
+    ("fx range -z 4 \"echo foo % bar\" -i 10..15", "foo {:04d} bar\r\n"),
+    ("fx range \"echo foo % bar\" -i 10..15 --zpad 5", "foo {:05d} bar\r\n"),
+    ("fx range --zpad 6 \"echo foo % bar\" -i 10..15", "foo {:06d} bar\r\n"),
+    ])
+def test_range_zpad_supported(cmd, xbody):
     """
-    Run 'fx range' without the -z / --zpad option to verify it's not required.
-    Also verifies that verbose and dryrun are optional
+    Verify that option -z/--zpad is supported in various positions
     """
-    cmd = "fx range \"echo foo % bar\" -i 10..15"
     result = runcmd(cmd)
-    exp = "".join(["foo {} bar\r\n".format(x) for x in range(10, 15)])
+    exp = "".join([xbody.format(x) for x in range(10, 15)])
     assert result == exp
 
 
@@ -598,7 +596,7 @@ def test_xargs_forreal(tmpdir, fx_xargs):
         cmd = "fx xargs 'touch first % last'"
         result = tbx.run(cmd, input="< tokens")
         assert "Would run" not in result
-        assert "Running" not in result
+        assert "> 'touch " not in result
         with open("tokens", 'r') as inp:
             for line in inp:
                 fobj = py.path.local(line.strip())
@@ -616,7 +614,7 @@ def test_xargs_verbose(tmpdir, fx_xargs):
         cmd = "fx xargs -v 'touch first % last'"
         result = tbx.run(cmd, input="< tokens")
         assert "Would run" not in result
-        assert "Running" in result
+        assert "> 'touch " in result
         with open("tokens", 'r') as inp:
             for line in inp:
                 fobj = py.path.local(line.strip())

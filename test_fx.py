@@ -161,7 +161,7 @@ def test_cmd_dryrun_supported(cmd):
     Verify that 'fx cmd' supports the dryrun option in various positions
     """
     result = runcmd(cmd)
-    exp = "".join(["would do 'echo foo {} bar'\r\n".format(x)
+    exp = "".join(["Would run 'echo foo {} bar'\r\n".format(x)
                    for x in ["one", "two", "three"]])
     assert result == exp
 
@@ -360,6 +360,23 @@ def test_range_interval_required():
            ]
     for item in exp:
         assert item in result
+
+
+# -----------------------------------------------------------------------------
+@pytest.mark.parametrize("cmd", [
+    "fx range \"echo foo % bar\" -i 1..5 --dryrun",
+    "fx range --dryrun \"echo foo % bar\" -i 1..5",
+    "fx range \"echo foo % bar\" -i 1..5 -n",
+    "fx range -n \"echo foo % bar\" -i 1..5",
+    ])
+def test_range_dryrun_supported(cmd):
+    """
+    Verify that 'fx cmd' supports the dryrun option in various positions
+    """
+    result = runcmd(cmd)
+    exp = "".join(["Would run 'echo foo {} bar'\r\n".format(x)
+                   for x in [1, 2, 3, 4]])
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------

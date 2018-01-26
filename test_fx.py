@@ -127,7 +127,7 @@ def test_cmd_command_required():
            "The following required arguments were not provided",
            "<command>",
            "<items>",
-           "fx cmd [FLAGS] <command> <items>...",
+           "fx cmd [FLAGS] [OPTIONS] <command> <items>...",
            ]
     for item in exp:
         assert item in result
@@ -143,7 +143,7 @@ def test_cmd_items_required():
     exp = ["error:",
            "The following required arguments were not provided",
            "<items>",
-           "fx cmd [FLAGS] <command> <items>...",
+           "fx cmd [FLAGS] [OPTIONS] <command> <items>...",
            ]
     for item in exp:
         assert item in result
@@ -458,16 +458,18 @@ def test_xargs_help():
     """
     cmd = "fx help xargs"
     result = runcmd(cmd)
-    assert "(needs work)" not in result
     exp = ["Replace <replstr> in command with clumps of arguments",
            "-n, --dryrun     Report what would happen without acting",
            "-r, --replstr <replstr>    Alternate replacement substring in "
            "command (default: '%')",
            "-h, --help       Prints help information",
-           "-v, --verbose    Report each command before running it",
-           "<command>    Command containing <replstr>",]
+           "-v, --verbose    Show command before running it",
+           "<command>    Command string containing <replstr>",]
+    unexp = ["(needs work)"]
     for item in exp:
         assert item in result
+    for item in unexp:
+        assert item not in result
 
 
 # -----------------------------------------------------------------------------

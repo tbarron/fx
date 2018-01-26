@@ -1,4 +1,10 @@
-## 0.0.7 ...
+## 0.0.8 ... 
+
+ * Clean up tests and code for replstr
+ * Ensure range and cmd have replstr support
+ * Make messages consistent among cmd, range, and xargs
+
+## 0.0.7 ... 2018.0125 16:16:43
 
  * Move the help display toward consistency with regard to capitalization
  * Add tests for rename subcommand

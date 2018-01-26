@@ -16,10 +16,10 @@ pub fn xargs(dryrun: bool, verbose: bool, replstr: &str, command: &str) {
         let cl: Vec<String> = _cmdlist(command, lrepl);
         for cmd in cl {
             if dryrun {
-                println!("Would run '{}'", cmd);
+                would_do(&cmd);
             } else {
                 if verbose {
-                    println!("Running '{}'", cmd);
+                    println!("> '{}'", cmd);
                 }
                 run(&cmd);
             }

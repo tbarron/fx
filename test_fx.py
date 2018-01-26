@@ -285,22 +285,10 @@ def test_perrno_names():
 
 
 # -----------------------------------------------------------------------------
-@pytest.mark.parametrize("cmd, xbody", [
-    ("fx range \"echo foo % bar\" -i 10..15 -v",
-     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
-    ("fx range -v \"echo foo % bar\" -i 10..15",
-     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
-    ("fx range \"echo foo % bar\" -i 10..15 --verbose",
-     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
-    ("fx range --verbose \"echo foo % bar\" -i 10..15",
-     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
     ])
-def test_range_verbose_supported(cmd, xbody):
     """
-    Verify that -v/--verbose is supported on 'fx range' in various positions
     """
     result = runcmd(cmd)
-    exp = "".join([xbody.format(x) for x in range(10, 15)])
     assert result == exp
 
 
@@ -385,10 +373,20 @@ def test_range_dryrun_supported(cmd):
     ("fx range -z 4 \"echo foo % bar\" -i 10..15", "foo {:04d} bar\r\n"),
     ("fx range \"echo foo % bar\" -i 10..15 --zpad 5", "foo {:05d} bar\r\n"),
     ("fx range --zpad 6 \"echo foo % bar\" -i 10..15", "foo {:06d} bar\r\n"),
+    ("fx range \"echo foo % bar\" -i 10..15 -v",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range -v \"echo foo % bar\" -i 10..15",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range \"echo foo % bar\" -i 10..15 --verbose",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
+    ("fx range --verbose \"echo foo % bar\" -i 10..15",
+     "> echo foo {0} bar\r\nfoo {0} bar\r\n"),
     ])
 def test_range_zpad_supported(cmd, xbody):
+def test_range_verbose_supported(cmd, xbody):
     """
     Verify that option -z/--zpad is supported in various positions
+    Verify that -v/--verbose is supported on 'fx range' in various positions
     """
     result = runcmd(cmd)
     exp = "".join([xbody.format(x) for x in range(10, 15)])

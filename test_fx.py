@@ -303,6 +303,30 @@ def test_range_altrepl_supported(cmd):
 
 
 # -----------------------------------------------------------------------------
+def test_range_norepl_def():
+    """
+    Verify that if command doesn't contain default <replstr> 'fx range'
+    complains
+    """
+    fx_cmd = "echo this is the command with no replstr"
+    cmd = "fx range \"{}\" -i 1..5".format(fx_cmd)
+    result = runcmd(cmd)
+    assert result.strip() == "No '%' found in '{}'".format(fx_cmd)
+
+
+# -----------------------------------------------------------------------------
+def test_range_norepl_alt():
+    """
+    Verify that if command doesn't contain default <replstr> 'fx range'
+    complains, even when we're using an alternate replstr
+    """
+    fx_cmd = "echo this is the command with no replstr"
+    cmd = "fx range -r xxx \"{}\" -i 1..5".format(fx_cmd)
+    result = runcmd(cmd)
+    assert result.strip() == "No 'xxx' found in '{}'".format(fx_cmd)
+
+
+# -----------------------------------------------------------------------------
 def test_range_command_required():
     """
     Verify that 'fx range' complains about the absence of any command string

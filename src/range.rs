@@ -4,20 +4,28 @@ use super::*;
 // ----------------------------------------------------------------------------
 // Generate a list of commands for a set of numbers
 //
-pub fn range(dryrun: bool, verbose: bool, rcmd: &str, lohigh: &str,
-             zpad: usize) {
+pub fn range(dryrun: bool, verbose: bool, replstr: &str, zpad: usize,
+             rcmd: &str, lohigh: &str) {
     // split up the low:high range string
     let tup: (i32, i32) = get_low_high(&lohigh);
-    let cmds = _rnglist(rcmd, zpad, tup.0, tup.1);
-    for cmd in cmds {
-        if dryrun {
-            would_do(&cmd);
-        } else {
-            if verbose {
-                println!("> {}", &cmd);
+    let mut lrepl = replstr;
+    if lrepl == "" {
+        lrepl = "%";
+    }
+    if rcmd.contains(replstr) {
+        let cmds = _rnglist(replstr, zpad, rcmd, tup.0, tup.1);
+        for cmd in cmds {
+            if dryrun {
+                would_do(&cmd);
+            } else {
+                if verbose {
+                    println!("> {}", &cmd);
+                }
+                run(&cmd);
             }
-            run(&cmd);
         }
+    } else {
+        println!("No '{}' found in '{}'", lrepl, rcmd);
     }
 }
 
@@ -26,11 +34,12 @@ pub fn range(dryrun: bool, verbose: bool, rcmd: &str, lohigh: &str,
 // number subbed in for '%'. If _zpad is not 0, enough '0' characters
 // are prepended to make the number that wide.
 //
-fn _rnglist(cmd: &str, _zpad: usize, low: i32, high: i32) -> Vec<String> {
+fn _rnglist(replstr: &str, zpad: usize, cmd: &str, low: i32, high: i32)
+            -> Vec<String> {
     let mut rvec: Vec<String> = Vec::new();
     for num in low .. high {
-        let num_s = format!("{:0zpad$}", num, zpad=_zpad);
-        let full = String::from(cmd.replace('%', num_s.as_str()));
+        let num_s = format!("{:0zpad$}", num, zpad=zpad);
+        let full = String::from(cmd.replace(replstr, num_s.as_str()));
         rvec.push(full)
     }
     rvec
@@ -93,7 +102,7 @@ mod tests {
     //
     #[test]
     fn test_rng_make_list() {
-        assert_eq!(_rnglist("echo %", 0, 7, 13),
+        assert_eq!(_rnglist("%", 0, "echo %", 7, 13),
                    ["echo 7", "echo 8", "echo 9", "echo 10", "echo 11",
                     "echo 12", ]);
     }
@@ -103,7 +112,7 @@ mod tests {
     //
     #[test]
     fn test_rng_make_list_zpad() {
-        assert_eq!(_rnglist("echo %", 2, 7, 13),
+        assert_eq!(_rnglist("%", 2, "echo %", 7, 13),
                    ["echo 07", "echo 08", "echo 09", "echo 10", "echo 11",
                     "echo 12", ]);
     }

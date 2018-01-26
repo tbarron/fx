@@ -221,15 +221,20 @@ fn main() {
         }
     } else if matches.is_present("range") {
         if let Some(matches) = matches.subcommand_matches("range") {
-            let command = matches.value_of("command").unwrap();
-            let lohigh = matches.value_of("lohigh").unwrap();
+            let dryrun = matches.is_present("dryrun");
+            let verbose = matches.is_present("verbose");
+            let replstr = match matches.value_of("replstr") {
+                Some(x) => x,
+                None => "%",
+            };
             let zpad: usize = match matches.value_of("zeropad") {
                 Some(x) => x.parse().unwrap(),
                 None => 0,
             };
-            let dryrun = matches.is_present("dryrun");
-            let verbose = matches.is_present("verbose");
-            range::range(dryrun, verbose, command, lohigh, zpad);
+            let command = matches.value_of("command").unwrap();
+            let lohigh = matches.value_of("lohigh").unwrap();
+            range::range(dryrun, verbose, replstr, zpad,
+                         command, lohigh);
         }
     } else if matches.is_present("rename") {
         if let Some(matches) = matches.subcommand_matches("rename") {

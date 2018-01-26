@@ -45,15 +45,16 @@ def test_help_contents():
            "-h, --help       Prints help information",
            "-V, --version    Prints version information",
            "ascii     Show the ascii code table",
-           "cmd       Replace % with arguments",
+           "cmd       Replace <replstr> with arguments",
            "help      Prints this message or the help of the given "
            "subcommand(s)",
            "mag       Report the size of a number",
            "odx       Report hex, decimal, octal, and binary values",
            "perrno    Report errno values and meanings",
-           "range     Replace % in command with numbers from <interval>",
+           "range     Replace <replstr> with <interval> values and "
+           "run the commands",
            "rename    Rename files based on a s/foo/bar/ expr",
-           "xargs     Replace <replstr> in command with clumps of args",
+           "xargs     Replace <replstr> in command with clumps of arguments",
            ]
     for item in exp:
         assert item in result
@@ -67,6 +68,29 @@ def test_versionless_subcommands():
     cmd = "fx help cmd"
     result = runcmd(cmd)
     assert "-V, --version" not in result
+
+
+# -----------------------------------------------------------------------------
+def test_cmd_help():
+    """
+    Verify that the right stuff is in the output of 'fx help cmd'
+    """
+    cmd = "fx help cmd"
+    result = runcmd(cmd)
+    exp = ["Replace <replstr> with arguments and run the commands",
+           "-n, --dryrun     Report what would happen without acting",
+           "-r, --replstr <replstr>    Alternate replacement substring in "
+           "command (default: '%')",
+           "-h, --help       Prints help information",
+           "-v, --verbose    Show command before running it",
+           "<command>     Command string containing <replstr>",
+           "<items>...    <replstr> replacements",
+           ]
+    unexp = ["(needs work)"]
+    for item in exp:
+        assert item in result
+    for item in unexp:
+        assert item not in result
 
 
 # -----------------------------------------------------------------------------
@@ -257,6 +281,31 @@ def test_range_command_required():
 
 
 # -----------------------------------------------------------------------------
+def test_range_help():
+    """
+    Verify that the right stuff is in the output of 'fx help range'
+    """
+    cmd = "fx help range"
+    result = runcmd(cmd)
+    exp = ["Replace <replstr> with <interval> values and run the commands",
+           "-n, --dryrun     Report what would happen without acting",
+           "-r, --replstr <replstr>      Alternate replacement substring in "
+           "command (default: '%')",
+           "-h, --help       Prints help information",
+           "-v, --verbose    Show command before running it",
+           "-i, --interval <interval>    <low>..<high> range from "
+           "<low> to <high>-1",
+           "-z, --zpad <zeropad>         Zero fill to <zeropad> columns",
+           "<command>    Command string containing <replstr>",
+           ]
+    unexp = ["(needs work)"]
+    for item in exp:
+        assert item in result
+    for item in unexp:
+        assert item not in result
+
+
+# -----------------------------------------------------------------------------
 def test_range_interval_required():
     """
     Verify that 'fx range <cmd>' complains about the absence of -i/--interval
@@ -369,8 +418,10 @@ def test_xargs_help():
     cmd = "fx help xargs"
     result = runcmd(cmd)
     assert "(needs work)" not in result
-    exp = ["Replace <replstr> in command with clumps of args",
+    exp = ["Replace <replstr> in command with clumps of arguments",
            "-n, --dryrun     Report what would happen without acting",
+           "-r, --replstr <replstr>    Alternate replacement substring in "
+           "command (default: '%')",
            "-h, --help       Prints help information",
            "-v, --verbose    Report each command before running it",
            "<command>    Command containing <replstr>",]

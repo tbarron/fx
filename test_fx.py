@@ -285,10 +285,20 @@ def test_perrno_names():
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("cmd", [
+    "fx range -r xxx \"echo foo xxx bar\" -i 1..5 -v",
+    "fx range -r xxx \"echo foo xxx bar\" -i 1..5 --verbose",
+    "fx range -r xxx -v \"echo foo xxx bar\" -i 1..5",
+    "fx range -r xxx --verbose \"echo foo xxx bar\" -i 1..5",
     ])
+def test_range_altrepl_supported(cmd):
     """
+    Verify that 'fx cmd' works with an alternate replstr
     """
     result = runcmd(cmd)
+    arglist = [1, 2, 3, 4]
+    body = "> echo foo {0} bar\r\nfoo {0} bar\r\n"
+    exp = "".join([body.format(x) for x in arglist])
     assert result == exp
 
 

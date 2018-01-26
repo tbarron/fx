@@ -341,7 +341,7 @@ fn run(cmd: &String) {
 // have --dryrun on the command line.
 //
 fn would_do(cmd: &String) {
-    println!("would do '{}'", cmd);
+    println!("Would run '{}'", cmd);
 }
 
 // ----------------------------------------------------------------------------

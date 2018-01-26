@@ -385,6 +385,18 @@ def test_range_interval_required():
 
 
 # -----------------------------------------------------------------------------
+def test_range_optionals():
+    """
+    Run 'fx range' without the -z / --zpad option to verify it's not required.
+    Also verifies that verbose and dryrun are optional
+    """
+    cmd = "fx range \"echo foo % bar\" -i 10..15"
+    result = runcmd(cmd)
+    exp = "".join(["foo {} bar\r\n".format(x) for x in range(10, 15)])
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("cmd", [
     "fx range \"echo foo % bar\" -i 1..5 --dryrun",
     "fx range --dryrun \"echo foo % bar\" -i 1..5",
@@ -611,6 +623,41 @@ def test_xargs_verbose(tmpdir, fx_xargs):
                 assert fobj.exists()
         assert py.path.local("first").exists()
         assert py.path.local("last").exists()
+
+
+# -----------------------------------------------------------------------------
+def test_xargs_command_required():
+    """
+    Verify that 'fx xargs' complains about the absence of any command string
+    """
+    cmd = "fx xargs"
+    result = runcmd(cmd)
+    exp = ["error:",
+           "The following required arguments were not provided",
+           "<command>",
+           # "--interval <interval>",
+           "fx xargs [FLAGS] [OPTIONS] <command>"
+           ]
+    for item in exp:
+        assert item in result
+
+
+# -----------------------------------------------------------------------------
+@pytest.mark.parametrize("cmd", [
+    "fx xargs \"echo foo % bar\" -v",
+    "fx xargs \"echo foo % bar\" --verbose",
+    "fx xargs -v \"echo foo % bar\"",
+    "fx xargs --verbose \"echo foo % bar\"",
+    ])
+def test_xargs_verbose_supported(cmd):
+    """
+    Verify that 'fx xargs' supports the verbose option in various positions
+    """
+    arglist = ["one", "two", "three"]
+    result = tbx.run(cmd, input="echo {} |".format(" ".join(arglist)))
+    body = "> 'echo foo {0} bar'\nfoo {0} bar\n"
+    exp = body.format(" ".join(arglist))
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------

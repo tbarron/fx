@@ -188,12 +188,17 @@ fn main() {
         ascii::ascii();
     } else if matches.is_present("cmd") {
         if let Some(matches) = matches.subcommand_matches("cmd") {
+            let dryrun = matches.is_present("dryrun");
+            let verbose = matches.is_present("verbose");
+            // this match should be wrapped in a function
+            let replstr = match matches.value_of("replstr") {
+                Some(x) => x,
+                None => "%",
+            };
             let command = matches.value_of("command").unwrap();
             let items: Vec<_> = matches.values_of("items")
                 .unwrap().collect();
-            let dryrun = matches.is_present("dryrun");
-            let verbose = matches.is_present("verbose");
-            cmd::cmd(dryrun, verbose, command, &items);
+            cmd::cmd(dryrun, verbose, replstr, command, &items);
         }
     } else if matches.is_present("mag") {
         if let Some(matches) = matches.subcommand_matches("mag") {

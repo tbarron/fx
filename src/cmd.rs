@@ -30,10 +30,10 @@ pub fn cmd(dryrun: bool, verbose: bool, replstr: &str, command: &str,
 // Generate a list of commands, one for each item with the item subbed
 // into the command
 //
-fn _cmdlist(command: &str, items: &[&str]) -> Vec<String> {
+fn _cmdlist(replstr: &str, command: &str, items: &[&str]) -> Vec<String> {
     let mut rvec: Vec<String> = Vec::new();
     for item in items {
-        let full = String::from(command.replace('%', item));
+        let full = String::from(command.replace(replstr, item));
         rvec.push(full);
     }
     rvec
@@ -52,7 +52,7 @@ mod tests {
     //
     #[test]
     fn test_cmd_make_list() {
-        assert_eq!(_cmdlist("echo %", &["foo", "bar", "xyzzy"]),
+        assert_eq!(_cmdlist("%", "echo %", &["foo", "bar", "xyzzy"]),
                    ["echo foo", "echo bar", "echo xyzzy"]);
     }
 }

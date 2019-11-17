@@ -3,7 +3,8 @@
  * Mark strings containing escapes with 'r' to keep flake8 happy
  * Update requirements: pip 19.3.1 or better, tbx 1.1.6 or better, flake8,
    and pytest; re-install
- * Update .travis.yml to test on Python 3.8 and 3.6, drop 2.7
+ * Update .travis.yml to test on Python 3.8 and 3.6, drop 2.7 and to only
+   test branch 'travis' and maj.min.micro versions
 
 ## 0.0.3 ... 2018.0112 14:30:34
 

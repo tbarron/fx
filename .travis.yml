@@ -9,11 +9,11 @@ python:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
- - "pip install --upgrade pip"
  - "pip install -r requirements.txt"
  - "pip install ."
- - "git config --global user.email \"travis-user@example.com\""
- - "git config --global user.name \"Travis Userq\""
+ - "pip list"
+ - "git config --global user.email \"tusculum@gmail.com\""
+ - "git config --global user.name \"Tom Barron\""
 # - "echo \"[MASTER]\" > .pylintrc"
 # - "echo \"disable=locally-disabled,locally-enabled\" >> .pylintrc"
 

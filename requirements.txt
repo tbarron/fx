@@ -2,6 +2,7 @@ docopt
 flake8
 pip>=19.3.1
 GitPython
+pexpect
 py
 pytest
 git+https://github.com/tbarron/tbx#egg=tbx>=1.1.6

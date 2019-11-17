@@ -209,7 +209,7 @@ def xw_sub(cmd, item):
         cmd = tbx.expand(cmd)
 
     if '%' in cmd:
-        [word] = re.findall("\S*%\S*", cmd)
+        [word] = re.findall(r"\S*%\S*", cmd)
         stant = re.sub('%', item, word)
         xp = "{} {}".format(stant, word)
         rval = re.sub(word, xp, cmd)

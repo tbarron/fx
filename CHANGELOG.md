@@ -1,3 +1,7 @@
+## 0.1.1 ... 2019-11-18 17:46:27
+
+ * Add tests and payload for 'fx version'
+
 ## 0.1.0 ... 2019-11-18 16:11:43
 
  * Drop GitPython since tbx provides the functionality needed.

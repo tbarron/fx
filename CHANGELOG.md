@@ -1,4 +1,4 @@
-## 0.0.5 ...
+## 0.0.5 ... 2019-11-18 16:03:18
 
  * Drop GitPython since tbx provides the functionality needed.
  * Support command line access to fx with fx/__main__.py, rewritten to use

@@ -1,9 +1,10 @@
-## 0.0.5 ... 2019-11-18 16:03:18
+## 0.1.0 ... 2019-11-18 16:11:43
 
  * Drop GitPython since tbx provides the functionality needed.
  * Support command line access to fx with fx/__main__.py, rewritten to use
    docopt-dispatch.
  * Update requirements.txt.
+ * Skip past unused tags 0.0.5 through 0.0.8.
 
 
 ## 0.0.4 ... 2019-11-17 10:10:08

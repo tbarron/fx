@@ -253,6 +253,7 @@ def test_fx_short_help():
              "    fx [-d] [-n] [-q] xargs COMMAND",
              "    fx [-d] [-n] [-q] count COMMAND -i RANGE",
              "    fx [-d] [-n] [-q] rename -e SUBSTITUTION FILE ...",
+             "    fx [-d] version",
              ]
     result = tbx.run("python fx help")
     assert result == "\n".join(exp_l) + "\n"
@@ -269,6 +270,7 @@ def test_fx_long_help():
              "    fx [-d] [-n] [-q] xargs COMMAND",
              "    fx [-d] [-n] [-q] count COMMAND -i RANGE",
              "    fx [-d] [-n] [-q] rename -e SUBSTITUTION FILE ...",
+             "    fx [-d] version",
              "",
              "Options:",
              "    -d        debug -- run the python debugger",
@@ -556,6 +558,16 @@ def test_usage():
     exp += ' high-1)\n            '
     actual = fx.usage()
     assert exp == actual
+
+
+# ---------------------------------------------------------------------------
+def test_version():
+    """
+    Running 'fx version' should report the current fx version
+    """
+    pytest.dbgfunc()
+    result = tbx.run("python fx version")
+    assert result == "fx {}\n".format(fx.version.__version__)
 
 
 # ---------------------------------------------------------------------------

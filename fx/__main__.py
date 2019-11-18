@@ -4,6 +4,7 @@ Usage:
     fx [-d] [-n] [-q] xargs COMMAND
     fx [-d] [-n] [-q] count COMMAND -i RANGE
     fx [-d] [-n] [-q] rename -e SUBSTITUTION FILE ...
+    fx [-d] version
 
 Options:
     -d        debug -- run the python debugger
@@ -16,6 +17,7 @@ Options:
 
 from docopt_dispatch import dispatch
 from fx import xw_sub
+from fx import version
 import os
 import pdb
 import re
@@ -94,6 +96,17 @@ def fx_xargs(**kw):
     cmd_t = kw['COMMAND']
     for cmd in xargs_wrap(cmd_t):
         dq_run(cmd, dryrun, quiet)
+
+
+# -----------------------------------------------------------------------------
+@dispatch.on('version')
+def fx_version(**kw):
+    """
+    Report the current fx version
+    """
+    if kw['d']:
+        pdb.set_trace()
+    print("fx {}".format(version.__version__))
 
 
 # -----------------------------------------------------------------------------

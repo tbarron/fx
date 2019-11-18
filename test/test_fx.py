@@ -3,7 +3,6 @@ import glob
 import io
 import re
 import os
-import pexpect
 import tbx
 import pytest
 
@@ -168,10 +167,11 @@ def test_xargs_cmdl_stdin(tmpdir):
     Expected output: 'foo <file> <file> <file> ... <file> bar'
     """
     pytest.dbgfunc()
-    flist = tbx.run("ls /usr/include/nfs").strip().replace("\n", " ")
-    exp = "would do 'echo foo " + flist + " bar'\n"
-    result = tbx.run("fx -n -x -c \"echo foo % bar\"",
-                     input="ls /usr/include/nfs |")
+    ilst = "one two three four".split()
+
+    exp = "would do 'echo foo {} bar'\n".format(" ".join(ilst))
+    result = tbx.run("python fx xargs -n \"echo foo % bar\"",
+                     input="\n".join(ilst))
     assert result == exp
 
 
@@ -243,30 +243,43 @@ def test_batch_command_quiet(tmpdir, capsys, fx_batch):
 
 
 # -----------------------------------------------------------------------------
-def test_fx_help():
+def test_fx_short_help():
     """
     Verify that 'fx --help' does the right thing
     """
     pytest.dbgfunc()
     exp_l = ["Usage:",
-             "fx [-d] [-n] [-q] -c COMMAND FILE ...",
-             "fx [-d] [-n] [-q] -x -c COMMAND",
-             "fx [-d] [-n] [-q] -i RANGE -c COMMAND",
-             "fx [-d] [-n] [-q] -e SUBSTITUTION FILE ...",
-             "Options",
-             "-d        debug -- run the python debugger",
-             "-n        dryrun -- just show what would happen",
-             "-q        quiet -- don't echo commands before running them",
-             "-c        COMMAND ('%' is replaced with each FILE in turn)",
-             "-e        SUBSTITUTION -- a substitute expression: s/foo/bar/",
-             "-i        RANGE -- <low number>:<high number>",
-             "-x        Bundle strings from stdin like xargs into '%'",
+             "    fx [-d] [-n] [-q] cmd COMMAND FILE ...",
+             "    fx [-d] [-n] [-q] xargs COMMAND",
+             "    fx [-d] [-n] [-q] count COMMAND -i RANGE",
+             "    fx [-d] [-n] [-q] rename -e SUBSTITUTION FILE ...",
              ]
-    # script = U.script_location("fx")
-    script = pexpect.which('fx')
-    result = pexpect.run("%s --help" % script).decode()
-    for exp_s in exp_l:
-        assert exp_s in result
+    result = tbx.run("python fx help")
+    assert result == "\n".join(exp_l) + "\n"
+
+
+# -----------------------------------------------------------------------------
+def test_fx_long_help():
+    """
+    Verify that 'fx --help' does the right thing
+    """
+    pytest.dbgfunc()
+    exp_l = ["Usage:",
+             "    fx [-d] [-n] [-q] cmd COMMAND FILE ...",
+             "    fx [-d] [-n] [-q] xargs COMMAND",
+             "    fx [-d] [-n] [-q] count COMMAND -i RANGE",
+             "    fx [-d] [-n] [-q] rename -e SUBSTITUTION FILE ...",
+             "",
+             "Options:",
+             "    -d        debug -- run the python debugger",
+             "    -n        dryrun -- just show what would happen",
+             "    -q        quiet -- don't echo commands before running them",
+             "    -e        SUBSTITUTION -- a substitute expression: "
+             "s/foo/bar/",
+             "    -i RANGE  <low number>:<high number>",
+             ]
+    result = tbx.run("python fx --help")
+    assert result == "\n".join(exp_l) + "\n"
 
 
 # -----------------------------------------------------------------------------

@@ -21,5 +21,5 @@ def test_deployable():
     last_tag = tbx.git_last_tag()
     msg = "Version ({}) does not match tag ({})".format(tbx.version(),
                                                         last_tag)
-    assert version() == last_tag, msg
+    assert version.__version__ == last_tag, msg
     assert tbx.git_hash() == tbx.git_hash(last_tag), "Tag != HEAD"

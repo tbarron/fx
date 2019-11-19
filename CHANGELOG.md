@@ -1,5 +1,7 @@
 ## 0.1.2 ... 2019-11-19 05:44:14
 
+ * Correct version check in test_zdeploy() (was checking against tbx
+   version)
  * Trigger another travis build for the version tag
 
 ## 0.1.1 ... 2019-11-19 05:22:09

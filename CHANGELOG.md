@@ -1,6 +1,7 @@
-## 0.1.1 ... 2019-11-18 17:46:27
+## 0.1.1 ... 2019-11-19 05:22:09
 
  * Add tests and payload for 'fx version'
+ * Tweaks to .travis.yml to test tagged versions
 
 ## 0.1.0 ... 2019-11-18 16:11:43
 

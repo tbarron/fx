@@ -3,19 +3,6 @@
         "hash": {
             "sha256": "cceeaf326e4a2e577cf1c98a78eeaef93c1928797a930eecf35e1032f0179dfa"
         },
-        "host-environment-markers": {
-            "implementation_name": "cpython",
-            "implementation_version": "3.6.1",
-            "os_name": "posix",
-            "platform_machine": "x86_64",
-            "platform_python_implementation": "CPython",
-            "platform_release": "17.3.0",
-            "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-4570.31.3~1/RELEASE_X86_64",
-            "python_full_version": "3.6.1",
-            "python_version": "3.6",
-            "sys_platform": "darwin"
-        },
         "pipfile-spec": 6,
         "requires": {},
         "sources": [
@@ -31,38 +18,49 @@
             "hashes": [
                 "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"
             ],
+            "index": "pypi",
             "version": "==0.6.2"
+        },
+        "gitdb": {
+            "hashes": [
+                "sha256:6c4cc71933456991da20917998acbe6cf4fb41eeaab7d6d67fbc05ecd4c865b0",
+                "sha256:96bf5c08b157a666fec41129e6d327235284cca4c81e92109260f353ba138005"
+            ],
+            "version": "==4.0.7"
         },
         "gitdb2": {
             "hashes": [
-                "sha256:cf9a4b68e8c4da8d42e48728c944ff7af2d8c9db303ac1ab32eac37aa4194b0e",
-                "sha256:b60e29d4533e5e25bb50b7678bbc187c8f6bcff1344b4f293b2ba55c85795f09"
+                "sha256:0986cb4003de743f2b3aba4c828edd1ab58ce98e1c4a8acf72ef02760d4beb4e",
+                "sha256:a1c974e5fab8c2c90192c1367c81cbc54baec04244bda1816e9c8ab377d1cba3"
             ],
-            "version": "==2.0.3"
+            "version": "==4.0.2"
         },
         "gitpython": {
             "hashes": [
-                "sha256:b8367c432de995dc330b5b146c5bfdc0926b8496e100fda6692134e00c0dcdc5",
-                "sha256:ad61bc25deadb535b047684d06f3654c001d9415e1971e51c9c20f5b510076e9"
+                "sha256:ad61bc25deadb535b047684d06f3654c001d9415e1971e51c9c20f5b510076e9",
+                "sha256:b8367c432de995dc330b5b146c5bfdc0926b8496e100fda6692134e00c0dcdc5"
             ],
+            "index": "pypi",
             "version": "==2.1.8"
         },
         "py": {
             "hashes": [
-                "sha256:8cca5c229d225f8c1e3085be4fcf306090b00850fefad892f9d96c7b6e2f310f",
-                "sha256:ca18943e28235417756316bfada6cd96b23ce60dd532642690dcfdaba988a76d"
+                "sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3",
+                "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"
             ],
-            "version": "==1.5.2"
+            "index": "pypi",
+            "version": "==1.10.0"
         },
-        "smmap2": {
+        "smmap": {
             "hashes": [
-                "sha256:b78ee0f1f5772d69ff50b1cbdb01b8c6647a8354f02f23b488cf4b2cfc923956",
-                "sha256:c7530db63f15f09f8251094b22091298e82bf6c699a6b8344aaaef3f2e1276c3"
+                "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182",
+                "sha256:a9a7479e4c572e2e775c404dcd3080c8dc49f39918c2cf74913d30c4c478e3c2"
             ],
-            "version": "==2.0.3"
+            "version": "==4.0.0"
         },
         "tbx": {
-            "git": "https://github.com/tbarron/tbx"
+            "git": "https://github.com/tbarron/tbx",
+            "ref": "ea04e5c434907fce1e1c816cba62bfe43d1c2826"
         }
     },
     "develop": {}

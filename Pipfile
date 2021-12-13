@@ -9,7 +9,7 @@ name = "pypi"
 
 docopt = "*"
 gitpython = "*"
-py = "*"
+py = ">=1.10.0"
 tbx = {git = "https://github.com/tbarron/tbx"}
 
 
